@@ -1,41 +1,85 @@
-import { create } from 'zustand';
-import { ActiveTab, FilterState, TechHub, CompanyCategory, FundingStage, ExperienceLevel, WorkplaceType } from '../types';
+﻿import { create } from 'zustand';
+import { 
+  ActiveTab, 
+  FilterState, 
+  TechHub, 
+  CompanyCategory, 
+  CompanyType,
+  FundingStage, 
+  ExperienceLevel, 
+  WorkplaceType,
+  EngineeringSubcategory,
+  ChennaiRelevance,
+  FreshnessStatus
+} from '../types';
 
 interface AppStoreState {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   
+  // Selection & inspection
   selectedCompanyId: string | null;
   setSelectedCompanyId: (id: string | null) => void;
+
+  selectedJobId: string | null;
+  setSelectedJobId: (id: string | null) => void;
   
   hoveredCompanyId: string | null;
   setHoveredCompanyId: (id: string | null) => void;
 
+  // Modals
+  isSubmitCompanyOpen: boolean;
+  setSubmitCompanyOpen: (open: boolean) => void;
+
+  isSubmitJobOpen: boolean;
+  setSubmitJobOpen: (open: boolean) => void;
+
+  isAdvancedFilterOpen: boolean;
+  setAdvancedFilterOpen: (open: boolean) => void;
+
+  isMobileDrawerOpen: boolean;
+  setMobileDrawerOpen: (open: boolean) => void;
+
+  // Filters
   filters: FilterState;
   setSearchQuery: (query: string) => void;
   toggleHub: (hub: TechHub) => void;
   toggleCategory: (category: CompanyCategory) => void;
+  toggleCompanyType: (type: CompanyType) => void;
   toggleFundingStage: (stage: FundingStage) => void;
   toggleExperienceLevel: (level: ExperienceLevel) => void;
   toggleWorkplaceType: (type: WorkplaceType) => void;
+  toggleEngineeringSubcategory: (subcat: EngineeringSubcategory) => void;
+  toggleTechnology: (tech: string) => void;
+  toggleRelevance: (relevance: ChennaiRelevance) => void;
+  toggleFreshness: (freshness: FreshnessStatus) => void;
   toggleHiringOnly: () => void;
+  toggleFresherOnly: () => void;
+  toggleEngineeringOnly: () => void;
+  toggleInternshipOnly: () => void;
   toggleFeaturedOnly: () => void;
   setSortBy: (sort: FilterState['sortBy']) => void;
   resetFilters: () => void;
-  
-  isMobileDrawerOpen: boolean;
-  setMobileDrawerOpen: (open: boolean) => void;
+  setQuickFilter: (filterKey: 'hiring' | 'fresher' | 'engineering' | 'internship' | 'startups' | 'product_companies') => void;
 }
 
 const initialFilters: FilterState = {
   searchQuery: '',
   selectedHubs: [],
   selectedCategories: [],
+  selectedCompanyTypes: [],
   selectedFundingStages: [],
   selectedExperienceLevels: [],
   selectedWorkplaceTypes: [],
+  selectedEngineeringSubcategories: [],
+  selectedTechnologies: [],
   isHiringOnly: false,
+  isFresherOnly: false,
+  isEngineeringOnly: false,
+  isInternshipOnly: false,
   isFeaturedOnly: false,
+  selectedRelevance: [],
+  selectedFreshness: [],
   sortBy: 'featured',
 };
 
@@ -46,8 +90,23 @@ export const useAppStore = create<AppStoreState>((set) => ({
   selectedCompanyId: null,
   setSelectedCompanyId: (id) => set({ selectedCompanyId: id }),
 
+  selectedJobId: null,
+  setSelectedJobId: (id) => set({ selectedJobId: id }),
+
   hoveredCompanyId: null,
   setHoveredCompanyId: (id) => set({ hoveredCompanyId: id }),
+
+  isSubmitCompanyOpen: false,
+  setSubmitCompanyOpen: (open) => set({ isSubmitCompanyOpen: open }),
+
+  isSubmitJobOpen: false,
+  setSubmitJobOpen: (open) => set({ isSubmitJobOpen: open }),
+
+  isAdvancedFilterOpen: false,
+  setAdvancedFilterOpen: (open) => set({ isAdvancedFilterOpen: open }),
+
+  isMobileDrawerOpen: false,
+  setMobileDrawerOpen: (open) => set({ isMobileDrawerOpen: open }),
 
   filters: initialFilters,
 
@@ -71,6 +130,16 @@ export const useAppStore = create<AppStoreState>((set) => ({
         selectedCategories: state.filters.selectedCategories.includes(category)
           ? state.filters.selectedCategories.filter((c) => c !== category)
           : [...state.filters.selectedCategories, category],
+      },
+    })),
+
+  toggleCompanyType: (type) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        selectedCompanyTypes: state.filters.selectedCompanyTypes.includes(type)
+          ? state.filters.selectedCompanyTypes.filter((t) => t !== type)
+          : [...state.filters.selectedCompanyTypes, type],
       },
     })),
 
@@ -104,9 +173,64 @@ export const useAppStore = create<AppStoreState>((set) => ({
       },
     })),
 
+  toggleEngineeringSubcategory: (subcat) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        selectedEngineeringSubcategories: state.filters.selectedEngineeringSubcategories.includes(subcat)
+          ? state.filters.selectedEngineeringSubcategories.filter((s) => s !== subcat)
+          : [...state.filters.selectedEngineeringSubcategories, subcat],
+      },
+    })),
+
+  toggleTechnology: (tech) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        selectedTechnologies: state.filters.selectedTechnologies.includes(tech)
+          ? state.filters.selectedTechnologies.filter((t) => t !== tech)
+          : [...state.filters.selectedTechnologies, tech],
+      },
+    })),
+
+  toggleRelevance: (relevance) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        selectedRelevance: state.filters.selectedRelevance.includes(relevance)
+          ? state.filters.selectedRelevance.filter((r) => r !== relevance)
+          : [...state.filters.selectedRelevance, relevance],
+      },
+    })),
+
+  toggleFreshness: (freshness) =>
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        selectedFreshness: state.filters.selectedFreshness.includes(freshness)
+          ? state.filters.selectedFreshness.filter((f) => f !== freshness)
+          : [...state.filters.selectedFreshness, freshness],
+      },
+    })),
+
   toggleHiringOnly: () =>
     set((state) => ({
       filters: { ...state.filters, isHiringOnly: !state.filters.isHiringOnly },
+    })),
+
+  toggleFresherOnly: () =>
+    set((state) => ({
+      filters: { ...state.filters, isFresherOnly: !state.filters.isFresherOnly },
+    })),
+
+  toggleEngineeringOnly: () =>
+    set((state) => ({
+      filters: { ...state.filters, isEngineeringOnly: !state.filters.isEngineeringOnly },
+    })),
+
+  toggleInternshipOnly: () =>
+    set((state) => ({
+      filters: { ...state.filters, isInternshipOnly: !state.filters.isInternshipOnly },
     })),
 
   toggleFeaturedOnly: () =>
@@ -121,6 +245,24 @@ export const useAppStore = create<AppStoreState>((set) => ({
 
   resetFilters: () => set({ filters: initialFilters }),
 
-  isMobileDrawerOpen: false,
-  setMobileDrawerOpen: (open) => set({ isMobileDrawerOpen: open }),
+  setQuickFilter: (filterKey) =>
+    set((state) => {
+      const reset = { ...initialFilters, searchQuery: state.filters.searchQuery };
+      switch (filterKey) {
+        case 'hiring':
+          return { filters: { ...reset, isHiringOnly: true } };
+        case 'fresher':
+          return { filters: { ...reset, isFresherOnly: true } };
+        case 'engineering':
+          return { filters: { ...reset, isEngineeringOnly: true } };
+        case 'internship':
+          return { filters: { ...reset, isInternshipOnly: true } };
+        case 'startups':
+          return { filters: { ...reset, selectedCompanyTypes: ['STARTUP'] } };
+        case 'product_companies':
+          return { filters: { ...reset, selectedCompanyTypes: ['PRODUCT COMPANY'] } };
+        default:
+          return { filters: reset };
+      }
+    }),
 }));
