@@ -14,7 +14,7 @@ namespace ChennaiStartupJobsMap.Api.Models
         public string Logo { get; set; } = string.Empty;
         public string Website { get; set; } = string.Empty;
         public string CareersUrl { get; set; } = string.Empty;
-        public List<string> CompanyTypes { get; set; } = new();
+        public List<string> CompanyTypes { get; set; } = new(); // MNC, GCC, STARTUP, PRODUCT COMPANY, IT SERVICES, SAAS, etc.
         public List<string> Categories { get; set; } = new();
         public string Hub { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
@@ -28,11 +28,11 @@ namespace ChennaiStartupJobsMap.Api.Models
         public string HiringStatus { get; set; } = "Active"; // Active, Hiring Surge, Selective, Not Hiring
         public List<string> Tags { get; set; } = new();
         public List<string> TechStack { get; set; } = new();
-        public string VerificationStatus { get; set; } = "VERIFIED";
+        public string VerificationStatus { get; set; } = "VERIFIED"; // VERIFIED, UNVERIFIED, PENDING_REVIEW, STALE, REJECTED
         public bool IsFeatured { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsSeedData { get; set; } = true;
-        public string SourceName { get; set; } = "Company Careers";
+        public string SourceName { get; set; } = "Official Careers / Company Website";
         public string? SourceUrl { get; set; }
         public DateTime DiscoveredAt { get; set; } = DateTime.UtcNow;
         public DateTime LastVerifiedAt { get; set; } = DateTime.UtcNow;
@@ -40,6 +40,8 @@ namespace ChennaiStartupJobsMap.Api.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public List<Job> Jobs { get; set; } = new();
+        public List<CompanySource> Sources { get; set; } = new();
+        public List<CareerSource> CareerSources { get; set; } = new();
     }
 
     public class Job
@@ -80,8 +82,8 @@ namespace ChennaiStartupJobsMap.Api.Models
         public DateTime LastSeenAt { get; set; } = DateTime.UtcNow;
         public DateTime LastVerifiedAt { get; set; } = DateTime.UtcNow;
         public DateTime? ExpiresAt { get; set; }
-        public string FreshnessStatus { get; set; } = "NEW"; // NEW, ACTIVE, RECENTLY_VERIFIED, STALE, EXPIRED
-        public string VerificationStatus { get; set; } = "VERIFIED";
+        public string FreshnessStatus { get; set; } = "NEW"; // NEW, ACTIVE, RECENTLY_VERIFIED, STALE, EXPIRED, CLOSED
+        public string VerificationStatus { get; set; } = "VERIFIED"; // VERIFIED, PENDING_REVIEW, UNVERIFIED, REJECTED
         public string? DuplicateGroupId { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsActive { get; set; } = true;
@@ -90,6 +92,106 @@ namespace ChennaiStartupJobsMap.Api.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public Company? Company { get; set; }
+    }
+
+    public class CompanySource
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string CompanyId { get; set; } = string.Empty;
+        public string SourceType { get; set; } = "OFFICIAL_WEBSITE"; // OFFICIAL_WEBSITE, OFFICIAL_CAREERS, PUBLIC_DIRECTORY, MANUAL_ADMIN_IMPORT, USER_SUBMISSION
+        public string SourceName { get; set; } = string.Empty;
+        public string SourceUrl { get; set; } = string.Empty;
+        public int Confidence { get; set; } = 90;
+        public string Status { get; set; } = "VERIFIED";
+        public DateTime DiscoveredAt { get; set; } = DateTime.UtcNow;
+        public DateTime? VerifiedAt { get; set; } = DateTime.UtcNow;
+
+        public Company? Company { get; set; }
+    }
+
+    public class CareerSource
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string CompanyId { get; set; } = string.Empty;
+        public string Provider { get; set; } = "Company Careers"; // Greenhouse, Lever, Workday, SmartRecruiters, Ashby, Company Careers
+        public string CareersUrl { get; set; } = string.Empty;
+        public string? JobsApiUrl { get; set; }
+        public string SourceType { get; set; } = "OFFICIAL_CAREERS";
+        public bool IsActive { get; set; } = true;
+        public DateTime LastCheckedAt { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = "VERIFIED";
+
+        public Company? Company { get; set; }
+    }
+
+    public class SavedJob
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string UserId { get; set; } = string.Empty;
+        public string JobId { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public Job? Job { get; set; }
+    }
+
+    public class SavedCompany
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string UserId { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public Company? Company { get; set; }
+    }
+
+    public class JobAlert
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string UserId { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Query { get; set; } = string.Empty;
+        public string? FiltersJson { get; set; }
+        public string Frequency { get; set; } = "Daily"; // Daily, Weekly
+        public bool IsActive { get; set; } = true;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? LastSentAt { get; set; }
+    }
+
+    public class Notification
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string UserId { get; set; } = string.Empty;
+        public string Type { get; set; } = "SYSTEM"; // NEW_JOB, JOB_ALERT, COMPANY_UPDATE, SYSTEM
+        public string Title { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string? Link { get; set; }
+        public bool IsRead { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    public class CompanyClaim
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string CompanyId { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
+        public string CorporateEmail { get; set; } = string.Empty;
+        public string ProofNotes { get; set; } = string.Empty;
+        public string Status { get; set; } = "PENDING"; // PENDING, APPROVED, REJECTED
+        public string? ReviewedBy { get; set; }
+        public DateTime? ReviewedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public Company? Company { get; set; }
+    }
+
+    public class AnalyticsEvent
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string EventType { get; set; } = "SEARCH"; // SEARCH, JOB_VIEW, COMPANY_VIEW, APPLY_CLICK, SAVED_JOB, SAVED_COMPANY
+        public string? EntityId { get; set; }
+        public string? MetadataJson { get; set; }
+        public string? UserIdentifierHash { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 
     public class Technology

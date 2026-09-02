@@ -221,5 +221,137 @@ namespace ChennaiStartupJobsMap.Tests
             Assert.NotEmpty(topMatch.MatchReasons);
             Assert.Contains(topMatch.MatchReasons, r => r.Contains("React") || r.Contains("Fresher") || r.Contains("Entry-level"));
         }
+
+        [Fact]
+        public async Task CompanyImportService_SeedsVerifiedCompaniesAndSetsProvenance()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var importer = new CompanyImportService(db, norm);
+
+            var result = await importer.SeedVerifiedDirectoryAsync();
+
+            Assert.True(result.TotalProcessed >= 50);
+            Assert.True(result.NewlyCreated >= 50);
+
+            var zoho = await db.Companies
+                .Include(c => c.Sources)
+                .Include(c => c.CareerSources)
+                .FirstOrDefaultAsync(c => c.Slug == "zoho");
+
+            Assert.NotNull(zoho);
+            Assert.Equal("VERIFIED", zoho.VerificationStatus);
+            Assert.NotEmpty(zoho.Sources);
+            Assert.NotEmpty(zoho.CareerSources);
+            Assert.Equal("https://www.zoho.com/careers/", zoho.CareerSources.First().CareersUrl);
+        }
+
+        [Fact]
+        public async Task UserService_SavesAndRetrievesSavedJobsAndCompanies()
+        {
+            using var db = GetInMemoryDbContext();
+            var jobService = new JobService(db);
+            var companyService = new CompanyService(db);
+            var userService = new UserService(db, jobService, companyService);
+
+            var userId = "test-user-42";
+            var jobId = "job-1";
+            var companyId = "comp-1";
+
+            // Save job & company
+            var jobSaved = await userService.SaveJobAsync(userId, jobId);
+            var compSaved = await userService.SaveCompanyAsync(userId, companyId);
+
+            Assert.True(jobSaved);
+            Assert.True(compSaved);
+
+            // Retrieve
+            var savedJobs = await userService.GetSavedJobsAsync(userId);
+            var savedComps = await userService.GetSavedCompaniesAsync(userId);
+
+            Assert.Single(savedJobs);
+            Assert.Equal(jobId, savedJobs[0].Id);
+            Assert.Single(savedComps);
+            Assert.Equal(companyId, savedComps[0].Id);
+
+            // Unsave
+            var jobUnsaved = await userService.UnsaveJobAsync(userId, jobId);
+            Assert.True(jobUnsaved);
+            var jobsAfter = await userService.GetSavedJobsAsync(userId);
+            Assert.Empty(jobsAfter);
+        }
+
+        [Fact]
+        public async Task UserService_CreatesAndDeletesJobAlerts()
+        {
+            using var db = GetInMemoryDbContext();
+            var jobService = new JobService(db);
+            var companyService = new CompanyService(db);
+            var userService = new UserService(db, jobService, companyService);
+
+            var userId = "test-user-alert";
+            var alert = await userService.CreateJobAlertAsync(
+                userId,
+                ".NET OMR Alert",
+                ".NET fresher Chennai",
+                "{\"hub\":\"OMR\"}",
+                "Daily");
+
+            Assert.NotNull(alert);
+            Assert.Equal(".NET OMR Alert", alert.Name);
+
+            var alerts = await userService.GetJobAlertsAsync(userId);
+            Assert.Single(alerts);
+
+            var deleted = await userService.DeleteJobAlertAsync(userId, alert.Id);
+            Assert.True(deleted);
+
+            var alertsAfter = await userService.GetJobAlertsAsync(userId);
+            Assert.Empty(alertsAfter);
+        }
+
+        [Fact]
+        public async Task RecruiterService_SubmitsJobInPendingReviewStatus()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var jobService = new JobService(db);
+            var recruiterService = new RecruiterService(db, norm, jobService);
+
+            var request = new SubmitJobRequest
+            {
+                CompanyName = "Freshworks",
+                Title = "Associate Backend Engineer (.NET / C#)",
+                Location = "Chennai, Tamil Nadu",
+                OriginalUrl = "https://careers.freshworks.com/job/123",
+                DescriptionSnippet = "Looking for .NET and C# freshers in Chennai",
+                SubmittedBy = "Talent Acquisition Partner"
+            };
+
+            var job = await recruiterService.SubmitRecruiterJobAsync("recruiter-1", request);
+
+            Assert.NotNull(job);
+            Assert.Equal("PENDING_REVIEW", job.VerificationStatus);
+            Assert.False(job.IsActive); // Must not be active until approved by admin
+        }
+
+        [Fact]
+        public async Task AnalyticsService_TracksEventsAndAggregatesMetrics()
+        {
+            using var db = GetInMemoryDbContext();
+            var analytics = new AnalyticsService(db);
+
+            await analytics.TrackEventAsync("SEARCH", metadataJson: "{\"q\":\".NET\"}");
+            await analytics.TrackEventAsync("JOB_VIEW", entityId: "job-1");
+            await analytics.TrackEventAsync("APPLY_CLICK", entityId: "job-1");
+
+            var overview = await analytics.GetAnalyticsOverviewAsync();
+
+            Assert.Equal(1, overview.TotalSearches);
+            Assert.Equal(1, overview.TotalJobViews);
+            Assert.Equal(1, overview.TotalApplyClicks);
+            Assert.NotEmpty(overview.TopViewedJobs);
+            Assert.Equal("job-1", overview.TopViewedJobs.First().Key);
+        }
     }
 }

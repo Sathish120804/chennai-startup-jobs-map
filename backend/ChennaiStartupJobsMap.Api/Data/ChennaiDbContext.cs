@@ -19,6 +19,14 @@ namespace ChennaiStartupJobsMap.Api.Data
         public DbSet<UserSubmission> Submissions => Set<UserSubmission>();
         public DbSet<RawIngestionRecord> RawIngestionRecords => Set<RawIngestionRecord>();
         public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
+        public DbSet<CompanySource> CompanySources => Set<CompanySource>();
+        public DbSet<CareerSource> CareerSources => Set<CareerSource>();
+        public DbSet<SavedJob> SavedJobs => Set<SavedJob>();
+        public DbSet<SavedCompany> SavedCompanies => Set<SavedCompany>();
+        public DbSet<JobAlert> JobAlerts => Set<JobAlert>();
+        public DbSet<Notification> Notifications => Set<Notification>();
+        public DbSet<CompanyClaim> CompanyClaims => Set<CompanyClaim>();
+        public DbSet<AnalyticsEvent> AnalyticsEvents => Set<AnalyticsEvent>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +88,36 @@ namespace ChennaiStartupJobsMap.Api.Data
                         v => string.Join(',', v),
                         v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
                     );
+            });
+
+            // Saved Jobs Compound Index
+            modelBuilder.Entity<SavedJob>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+                entity.HasIndex(s => new { s.UserId, s.JobId }).IsUnique();
+            });
+
+            // Saved Companies Compound Index
+            modelBuilder.Entity<SavedCompany>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+                entity.HasIndex(s => new { s.UserId, s.CompanyId }).IsUnique();
+            });
+
+            // Company Claim
+            modelBuilder.Entity<CompanyClaim>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.HasIndex(c => c.CompanyId);
+                entity.HasIndex(c => c.UserId);
+            });
+
+            // Analytics
+            modelBuilder.Entity<AnalyticsEvent>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.HasIndex(a => a.EventType);
+                entity.HasIndex(a => a.CreatedAt);
             });
 
             // Seed Data

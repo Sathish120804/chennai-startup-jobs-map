@@ -88,6 +88,10 @@ builder.Services.AddScoped<IIngestionPipelineService, IngestionPipelineService>(
 builder.Services.AddScoped<IBackgroundJobManager, BackgroundJobManager>();
 builder.Services.AddSingleton<IEmbeddingProvider, DeterministicEmbeddingProvider>();
 builder.Services.AddScoped<IJobRecommendationService, JobRecommendationService>();
+builder.Services.AddScoped<ICompanyImportService, CompanyImportService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRecruiterService, RecruiterService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 // 7. Swagger / OpenAPI Configuration with JWT Bearer Security & XML Comments
 builder.Services.AddSwaggerGen(c =>
@@ -195,5 +199,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Auto-seed verified Chennai directory
+using (var scope = app.Services.CreateScope())
+{
+    var importer = scope.ServiceProvider.GetRequiredService<ICompanyImportService>();
+    importer.SeedVerifiedDirectoryAsync().GetAwaiter().GetResult();
+}
 
 app.Run();

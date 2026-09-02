@@ -40,6 +40,57 @@
             Calculate data quality score for a job posting.
             </summary>
         </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetAdminDashboard">
+            <summary>
+            Get consolidated operational admin dashboard overview.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetCompanyCoverage">
+            <summary>
+            Get Chennai coverage breakdown by corridors and sector domains.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.ApproveClaim(System.String)">
+            <summary>
+            Approve a company claim request submitted by a recruiter.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.RejectClaim(System.String)">
+            <summary>
+            Reject a company claim request.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.ApproveJob(System.String)">
+            <summary>
+            Approve a recruiter or community submitted job vacancy.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.RejectJob(System.String)">
+            <summary>
+            Reject a job vacancy posting.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.SeedVerifiedDirectory(ChennaiStartupJobsMap.Api.Services.ICompanyImportService)">
+            <summary>
+            Seed and update verified Chennai tech companies directory.
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.AnalyticsController">
+            <summary>
+            Platform Analytics and Observability.
+            Tracks aggregate interaction events (search, job view, company view, apply click) with zero intrusive tracking.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AnalyticsController.TrackEvent(ChennaiStartupJobsMap.Api.Controllers.v1.TrackEventRequest)">
+            <summary>
+            Log an aggregate platform event (e.g. search, job view, apply click).
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AnalyticsController.GetOverview">
+            <summary>
+            Retrieve high-level aggregate platform metrics and interaction activity.
+            </summary>
+        </member>
         <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController">
             <summary>
             Authentication and Identity Operations for Chennai Startup and Jobs Map.
@@ -121,6 +172,14 @@
             <response code="200">Company details.</response>
             <response code="404">Company with specified slug not found.</response>
         </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.GetSimilarCompanies(System.String,ChennaiStartupJobsMap.Api.Services.AI.IJobRecommendationService)">
+            <summary>
+            Get semantically similar Chennai companies based on domain, tech stack, and corridor.
+            </summary>
+            <param name="id">Company ID.</param>
+            <param name="recommendationService">Injected recommendation service.</param>
+            <response code="200">List of similar company recommendations.</response>
+        </member>
         <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.CreateCompany(ChennaiStartupJobsMap.Api.DTOs.SubmitCompanyRequest)">
             <summary>
             Create a new company record (Moderator or Admin only).
@@ -167,9 +226,33 @@
             <response code="200">Job vacancy details.</response>
             <response code="404">Job not found.</response>
         </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController.GetJobBySlug(System.String)">
+            <summary>
+            Get job vacancy details by URL slug.
+            </summary>
+            <param name="slug">Job slug (e.g. "software-engineer-freshworks").</param>
+            <response code="200">Job vacancy details.</response>
+            <response code="404">Job with specified slug not found.</response>
+        </member>
         <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController.CreateJob(ChennaiStartupJobsMap.Api.DTOs.SubmitJobRequest)">
             <summary>
             Create a new job vacancy (Recruiter or Admin only).
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.NotificationsController">
+            <summary>
+            User In-App Notifications and Alerts.
+            Provides notifications for new matching jobs, company updates, and platform alerts.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.NotificationsController.GetNotifications">
+            <summary>
+            Retrieve notifications for the current authenticated user.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.NotificationsController.MarkAsRead(System.String)">
+            <summary>
+            Mark a notification as read.
             </summary>
         </member>
         <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.RecommendationsController">
@@ -199,6 +282,32 @@
             <param name="hub">Preferred corridor.</param>
             <param name="limit">Maximum recommendations (default: 6).</param>
             <response code="200">Ranked company recommendations.</response>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.RecruitersController">
+            <summary>
+            Recruiter and Company Representative Portal.
+            Enables verified talent acquisition teams to claim companies and submit vacancy postings for moderation.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecruitersController.ClaimCompany(ChennaiStartupJobsMap.Api.Controllers.v1.ClaimCompanyRequest)">
+            <summary>
+            Submit a formal claim request to manage a Chennai company profile.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecruitersController.GetMyClaims">
+            <summary>
+            Retrieve all company claim requests submitted by the current recruiter.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecruitersController.PostJob(ChennaiStartupJobsMap.Api.DTOs.SubmitJobRequest)">
+            <summary>
+            Submit a direct job vacancy for moderation. Starts in PENDING_REVIEW status.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecruitersController.GetMyJobs">
+            <summary>
+            Retrieve jobs submitted by recruiter.
+            </summary>
         </member>
         <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.SearchController">
             <summary>
@@ -232,6 +341,57 @@
         <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController.GetSubmissionStatus(System.String)">
             <summary>
             Check moderation status of a submission.
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController">
+            <summary>
+            Authenticated User Platform and Preferences.
+            Manages saved jobs, bookmarked companies, and personalized job alerts.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.GetSavedJobs">
+            <summary>
+            Retrieve all jobs saved/bookmarked by the current authenticated user.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.SaveJob(System.String)">
+            <summary>
+            Save/bookmark a job opportunity for later review.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.UnsaveJob(System.String)">
+            <summary>
+            Remove a job from the user's saved jobs list.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.GetSavedCompanies">
+            <summary>
+            Retrieve all tech companies bookmarked by the current user.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.SaveCompany(System.String)">
+            <summary>
+            Bookmark a company in the directory.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.UnsaveCompany(System.String)">
+            <summary>
+            Remove a company from the user's saved list.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.GetJobAlerts">
+            <summary>
+            Retrieve configured job search alerts for the current user.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.CreateJobAlert(ChennaiStartupJobsMap.Api.Controllers.v1.CreateJobAlertRequest)">
+            <summary>
+            Create a new customized job alert (e.g. ".NET fresher Chennai").
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.UsersController.DeleteJobAlert(System.String)">
+            <summary>
+            Delete an active job alert.
             </summary>
         </member>
         <member name="T:ChennaiStartupJobsMap.Api.Services.AI.DeterministicEmbeddingProvider">

@@ -112,6 +112,29 @@ namespace ChennaiStartupJobsMap.Api.Controllers.v1
         }
 
         /// <summary>
+        /// Get semantically similar Chennai companies based on domain, tech stack, and corridor.
+        /// </summary>
+        /// <param name="id">Company ID.</param>
+        /// <param name="recommendationService">Injected recommendation service.</param>
+        /// <response code="200">List of similar company recommendations.</response>
+        [HttpGet("{id}/similar")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<List<ChennaiStartupJobsMap.Api.Services.AI.CompanyRecommendationDto>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<List<ChennaiStartupJobsMap.Api.Services.AI.CompanyRecommendationDto>>>> GetSimilarCompanies(
+            string id,
+            [FromServices] ChennaiStartupJobsMap.Api.Services.AI.IJobRecommendationService recommendationService)
+        {
+            var company = await _companyService.GetCompanyByIdAsync(id);
+            if (company == null) return NotFound(ApiResponse<List<ChennaiStartupJobsMap.Api.Services.AI.CompanyRecommendationDto>>.Fail("Company not found."));
+
+            var category = company.Categories.Count > 0 ? company.Categories[0] : null;
+            var similar = await recommendationService.GetCompanyRecommendationsAsync(company.Name, category, company.Hub, limit: 4);
+            var filtered = similar.Where(s => s.Company.Id != id).ToList();
+
+            return Ok(ApiResponse<List<ChennaiStartupJobsMap.Api.Services.AI.CompanyRecommendationDto>>.Ok(filtered));
+        }
+
+        /// <summary>
         /// Create a new company record (Moderator or Admin only).
         /// </summary>
         [HttpPost]

@@ -7,7 +7,7 @@ import { useAppStore } from '../../store/useAppStore';
 export const CREATOR_PROFILE = {
   name: 'Sathish A',
   githubUrl: 'https://github.com/Sathish120804', // Configurable GitHub profile
-  linkedinUrl: 'https://www.linkedin.com/in/sathish-a-placeholder', // Configurable LinkedIn profile placeholder
+  linkedinUrl: 'https://www.linkedin.com/in/sathish-a-3204aa27b/', // Verified creator LinkedIn profile
 };
 
 export const Footer: React.FC = () => {

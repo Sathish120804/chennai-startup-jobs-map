@@ -4,10 +4,10 @@ import { db } from '../../services/db';
 import { useAppStore } from '../../store/useAppStore';
 import { 
   MapPin, 
-  Briefcase, 
   GraduationCap, 
   CheckCircle2, 
-  ArrowUpRight
+  ArrowUpRight,
+  ExternalLink
 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
@@ -27,7 +27,7 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
       onMouseEnter={() => setHoveredCompanyId(company.id)}
       onMouseLeave={() => setHoveredCompanyId(null)}
       onClick={() => setSelectedCompanyId(company.id)}
-      className={`p-5 flex flex-col justify-between transition-all duration-200 ${
+      className={`p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer ${
         isHovered ? 'border-brand-500 shadow-md ring-2 ring-brand-500/10' : ''
       }`}
     >
@@ -45,7 +45,7 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
                   {company.name}
                 </h3>
                 {company.verificationStatus === 'VERIFIED' && (
-                  <CheckCircle2 className="w-4 h-4 text-brand-600" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-600 shrink-0" />
                 )}
               </div>
               <div className="flex items-center gap-1 text-xs text-slate-500">
@@ -60,26 +60,32 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
             size="sm"
             className="shrink-0"
           >
-            {stats.activeJobsCount > 0 ? `${stats.activeJobsCount} Hiring` : 'Selective'}
+            {stats.activeJobsCount > 0 ? `${stats.activeJobsCount} Active Jobs` : 'Verified Entity'}
           </Badge>
         </div>
 
         <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-          {company.tagline}
+          {company.tagline || company.description}
         </p>
 
+        {/* Company Types & Category */}
         <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-          <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
-            {company.categories[0]}
-          </span>
-          <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-brand-50 text-brand-700">
-            {company.fundingStage}
-          </span>
+          {company.companyTypes?.slice(0, 2).map((t) => (
+            <span key={t} className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-white tracking-wide">
+              {t}
+            </span>
+          ))}
+          {company.categories[0] && (
+            <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
+              {company.categories[0]}
+            </span>
+          )}
           <span className="px-2 py-0.5 rounded text-[11px] text-slate-500">
             Est. {company.foundedYear}
           </span>
         </div>
 
+        {/* Tech Stack */}
         <div className="flex flex-wrap items-center gap-1">
           {company.techStack.slice(0, 4).map((tech) => (
             <span
@@ -99,26 +105,34 @@ export const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
 
       <div className="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs">
-          {stats.fresherJobsCount > 0 && (
+          {stats.fresherJobsCount > 0 ? (
             <span className="inline-flex items-center gap-1 text-emerald-700 font-medium text-[11px]">
               <GraduationCap className="w-3.5 h-3.5" />
               <span>{stats.fresherJobsCount} Fresher</span>
             </span>
-          )}
-          {stats.engineeringJobsCount > 0 && stats.fresherJobsCount === 0 && (
-            <span className="inline-flex items-center gap-1 text-indigo-700 font-medium text-[11px]">
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>{stats.engineeringJobsCount} Engineering</span>
-            </span>
-          )}
-          {stats.activeJobsCount === 0 && (
-            <span className="text-slate-400 text-[11px]">No open positions</span>
+          ) : (
+            <span className="text-slate-400 text-[11px]">{company.employeeCount} Team</span>
           )}
         </div>
 
-        <div className="flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700">
-          <span>Explore</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2">
+          {company.careersUrl && (
+            <a
+              href={company.careersUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 transition-colors"
+            >
+              <span>View Careers</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+
+          <div className="flex items-center gap-0.5 text-xs font-semibold text-slate-600 hover:text-brand-600">
+            <span>Explore</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </div>
         </div>
       </div>
     </Card>

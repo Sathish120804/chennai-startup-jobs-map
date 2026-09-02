@@ -89,6 +89,26 @@ namespace ChennaiStartupJobsMap.Api.Controllers.v1
         }
 
         /// <summary>
+        /// Get job vacancy details by URL slug.
+        /// </summary>
+        /// <param name="slug">Job slug (e.g. "software-engineer-freshworks").</param>
+        /// <response code="200">Job vacancy details.</response>
+        /// <response code="404">Job with specified slug not found.</response>
+        [HttpGet("slug/{slug}")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<JobDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<JobDto>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponse<JobDto>>> GetJobBySlug(string slug)
+        {
+            var job = await _jobService.GetJobBySlugAsync(slug);
+            if (job == null)
+            {
+                return NotFound(ApiResponse<JobDto>.Fail($"Job with slug '{slug}' was not found."));
+            }
+            return Ok(ApiResponse<JobDto>.Ok(job));
+        }
+
+        /// <summary>
         /// Create a new job vacancy (Recruiter or Admin only).
         /// </summary>
         [HttpPost]
