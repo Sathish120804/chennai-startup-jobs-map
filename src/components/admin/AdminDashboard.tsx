@@ -7,21 +7,41 @@ import {
   Layers, 
   Play, 
   Trash2, 
-  ExternalLink
+  ExternalLink,
+  Zap
 } from 'lucide-react';
 import { db } from '../../services/db';
+import { adminApi, AdminMetrics, IngestionRunDto } from '../../services/api/adminApi';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Card } from '../ui/Card';
 
 export const AdminDashboard: React.FC = () => {
   const [, setVersion] = useState(0);
-  const [activeSubTab, setActiveSubTab] = useState<'submissions' | 'jobs' | 'discovery'>('submissions');
+  const [activeSubTab, setActiveSubTab] = useState<'submissions' | 'jobs' | 'discovery' | 'ingestion'>('ingestion');
+  const [apiMetrics, setApiMetrics] = useState<AdminMetrics | null>(null);
+  const [ingestionRuns, setIngestionRuns] = useState<IngestionRunDto[]>([]);
+  const [isTriggering, setIsTriggering] = useState(false);
+
+  const fetchBackendData = async () => {
+    const metrics = await adminApi.getMetrics();
+    const runs = await adminApi.getIngestionRuns();
+    setApiMetrics(metrics);
+    setIngestionRuns(runs);
+  };
 
   useEffect(() => {
+    fetchBackendData();
     const unsub = db.subscribe(() => setVersion((v) => v + 1));
     return unsub;
   }, []);
+
+  const handleTriggerIngestion = async () => {
+    setIsTriggering(true);
+    await adminApi.triggerIngestion('src-careers');
+    await fetchBackendData();
+    setIsTriggering(false);
+  };
 
   const companies = db.getCompanies();
   const jobs = db.getJobs();
@@ -37,6 +57,11 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-brand-400" />
             <h2 className="text-xl sm:text-2xl font-bold">Chennai Discovery Engine — Admin Control</h2>
+            {apiMetrics && (
+              <Badge variant="success" size="sm">
+                API: {apiMetrics.environment}
+              </Badge>
+            )}
           </div>
           <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
             Monitor automated web discovery queries, review incoming community submissions, inspect duplicate clusters, and verify Chennai location relevance signals.
@@ -82,7 +107,18 @@ export const AdminDashboard: React.FC = () => {
         </Card>
       </div>
 
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 flex-wrap">
+        <button
+          onClick={() => setActiveSubTab('ingestion')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeSubTab === 'ingestion'
+              ? 'bg-brand-600 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          Automated Ingestion Pipeline ({ingestionRuns.length})
+        </button>
+
         <button
           onClick={() => setActiveSubTab('submissions')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
@@ -116,6 +152,64 @@ export const AdminDashboard: React.FC = () => {
           All Indexed Jobs ({jobs.length})
         </button>
       </div>
+
+      {activeSubTab === 'ingestion' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-brand-600" />
+                <span>Idempotent Data Ingestion Pipeline Engine</span>
+              </h3>
+              <p className="text-xs text-slate-500">
+                Executes discovery, title/company normalization, tech extraction, duplicate resolution, and freshness verification.
+              </p>
+            </div>
+
+            <Button
+              size="sm"
+              variant="primary"
+              disabled={isTriggering}
+              onClick={handleTriggerIngestion}
+              leftIcon={<Play className="w-3.5 h-3.5" />}
+            >
+              {isTriggering ? 'Running Ingestion...' : 'Trigger Discovery Ingestion'}
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {ingestionRuns.map((run) => (
+              <div
+                key={run.id}
+                className="p-4 rounded-2xl border border-slate-200 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-slate-900">Run ID: {run.id.slice(0, 14)}...</span>
+                    <Badge variant={run.status === 'COMPLETED' ? 'success' : run.status === 'FAILED' ? 'warning' : 'neutral'} size="sm">
+                      {run.status}
+                    </Badge>
+                    <span className="text-slate-400">• Source: {run.sourceId}</span>
+                  </div>
+                  <div className="text-slate-500 flex flex-wrap items-center gap-3 text-[11px]">
+                    <span>Discovered: <strong>{run.recordsDiscovered}</strong></span>
+                    <span>•</span>
+                    <span className="text-emerald-700">Created: <strong>{run.recordsCreated}</strong></span>
+                    <span>•</span>
+                    <span className="text-brand-700">Updated: <strong>{run.recordsUpdated}</strong></span>
+                    <span>•</span>
+                    <span className="text-purple-700">Duplicates: <strong>{run.duplicatesFound}</strong></span>
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-slate-400 text-right shrink-0">
+                  <span>Started: {new Date(run.startedAt).toLocaleTimeString()}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {activeSubTab === 'submissions' && (
         <div className="space-y-4">

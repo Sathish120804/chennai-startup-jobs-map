@@ -1,108 +1,119 @@
 # Chennai Startup & Jobs Map
 
-> A Chennai-focused startup, company, ecosystem and job discovery platform.
+> An independent Chennai-focused startup, company, tech ecosystem, and automated job discovery platform.
 
-[![Status](https://img.shields.io/badge/status-in%20development-orange)](#project-status)
-[![License](https://img.shields.io/badge/license-TBD-lightgrey)](#license)
-[![Frontend](https://img.shields.io/badge/frontend-TBD-blue)](#technology-stack)
-[![Backend](https://img.shields.io/badge/backend-TBD-blue)](#technology-stack)
-[![Database](https://img.shields.io/badge/database-PostgreSQL-blue)](#technology-stack)
-
----
-
-## Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Vision](#vision)
-3. [Problem Statement](#problem-statement)
-4. [Product Concept](#product-concept)
-5. [Reference Product](#reference-product)
-6. [Core Idea](#core-idea)
-7. [Who Is This For?](#who-is-this-for)
-8. [Primary User Journey](#primary-user-journey)
-9. [Product Areas](#product-areas)
-10. [Company Discovery](#company-discovery)
-11. [Job Discovery](#job-discovery)
-12. [Automated Vacancy Discovery](#automated-vacancy-discovery)
-13. [Job Sources](#job-sources)
-14. [Source Attribution](#source-attribution)
-15. [Chennai Relevance Engine](#chennai-relevance-engine)
-16. [Job Classification](#job-classification)
-17. [Fresher Detection](#fresher-detection)
-18. [Engineering Jobs](#engineering-jobs)
-19. [Technology Discovery](#technology-discovery)
-20. [Duplicate Detection](#duplicate-detection)
-21. [Job Freshness](#job-freshness)
-22. [Company Map](#company-map)
-23. [Search](#search)
-24. [Filters](#filters)
-25. [Company Profiles](#company-profiles)
-26. [Job Pages](#job-pages)
-27. [Submissions](#submissions)
-28. [Admin Dashboard](#admin-dashboard)
-29. [Automation](#automation)
-30. [AI Usage](#ai-usage)
-31. [Data Quality](#data-quality)
-32. [Security](#security)
-33. [Privacy](#privacy)
-34. [SEO](#seo)
-35. [Scalability](#scalability)
-36. [Cost Philosophy](#cost-philosophy)
-37. [Technology Stack](#technology-stack)
-38. [Architecture](#architecture)
-39. [Repository Structure](#repository-structure)
-40. [Development Workflow](#development-workflow)
-41. [Local Development](#local-development)
-42. [Environment Variables](#environment-variables)
-43. [Database](#database)
-44. [Testing](#testing)
-45. [Git Workflow](#git-workflow)
-46. [Development Roadmap](#development-roadmap)
-47. [Current Status](#current-status)
-48. [Future Features](#future-features)
-49. [Production Strategy](#production-strategy)
-50. [Important Engineering Rules](#important-engineering-rules)
-51. [Responsible Data Collection](#responsible-data-collection)
-52. [Contribution](#contribution)
-53. [License](#license)
+[![Status](https://img.shields.io/badge/status-Milestone--5--Complete-emerald)](#current-status)
+[![Frontend](https://img.shields.io/badge/frontend-React%2018%20%7C%20TypeScript%20%7C%20Vite%20%7C%20Tailwind-blue)](#technology-stack)
+[![Backend](https://img.shields.io/badge/backend-ASP.NET%20Core%20Web%20API%20%7C%20.NET%2010-purple)](#technology-stack)
+[![Database](https://img.shields.io/badge/database-EF%20Core%20%7C%20PostgreSQL-blue)](#technology-stack)
 
 ---
 
-# Project Overview
+## Project Overview
 
-**Chennai Startup & Jobs Map** is a Chennai-focused digital platform designed to help people discover companies, startups, technology organizations, employment opportunities, internships and career opportunities across Chennai.
+**Chennai Startup & Jobs Map** is South Asia's premier SaaS and DeepTech discovery engine designed to help students, freshers, developers, and professionals discover tech companies, startups, career opportunities, and internships across Chennai's key corridors (OMR, Guindy, Siruseri, Ambattur, Porur, Perungudi, Thoraipakkam, Taramani, etc.).
 
-The product is inspired by the concept of:
+---
 
-**Bangalore Startup Map**
-
-but is being developed as an independent product with its own:
-
-- brand
-- interface
-- architecture
-- database
-- data model
-- search system
-- map experience
-- job discovery engine
-- automation system
-
-The central concept is:
+## Architecture Overview
 
 ```text
-Chennai Companies
-        +
-Chennai Startups
-        +
-Company Locations
-        +
-Current Vacancies
-        +
-Search
-        +
-Filters
-        +
-Interactive Map
-        +
-Automated Discovery
+       ┌────────────────────────────────────────────────────────┐
+       │             React + TypeScript Frontend                │
+       │    (Leaflet Map, Search Bar, Filters, Company/Job Cards)│
+       └──────────────────────────┬─────────────────────────────┘
+                                  │
+                   API Client Layer (VITE_API_BASE_URL)
+             (With automatic Fallback Dev Mode when offline)
+                                  │
+                                  ▼
+       ┌────────────────────────────────────────────────────────┐
+       │             ASP.NET Core Web API (.NET 10)            │
+       │  (CompaniesController, JobsController, SearchController)│
+       └──────────────────────────┬─────────────────────────────┘
+                                  │
+                                  ▼
+       ┌────────────────────────────────────────────────────────┐
+       │             Automated Data Ingestion Pipeline          │
+       │ (Discovery -> Normalize -> Match -> Deduplicate -> Verify)│
+       └──────────────────────────┬─────────────────────────────┘
+                                  │
+                                  ▼
+       ┌────────────────────────────────────────────────────────┐
+       │        Entity Framework Core Relational Data Layer      │
+       │     (Companies, Jobs, Technologies, IngestionRuns)     │
+       └────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Key Milestone 5 Features
+
+1. **Automated Ingestion Pipeline (`IngestionPipelineService.cs`)**:
+   - Source Registry supporting `COMPANY_CAREERS`, `GREENHOUSE_ATS`, `LEVER_ATS`, `WORKDAY_ATS`, `AUTHORIZED_SEARCH_API`, `USER_SUBMISSION`.
+   - Ingestion run tracking (`IngestionRun` model) & raw payload logging.
+   - Idempotent execution: running discovery repeatedly updates existing postings without creating duplicates.
+2. **Title, Company & Location Normalization (`NormalizationService.cs`)**:
+   - Extracts technology tags (`.NET`, `React`, `Python`, `Java`, `Spring Boot`, `AWS`, `PostgreSQL`, `C#`).
+   - Rule-based fresher classification & internship detection.
+3. **Company Matching & Job Deduplication (`CompanyMatcher.cs`)**:
+   - Matches incoming job postings to existing Chennai companies via domain names, normalized titles, and aliases with confidence scoring (`HIGH`, `MEDIUM`, `LOW`).
+   - Preserves multi-portal source attribution (`JobSourceRecord`).
+4. **Data Quality Scoring (`DataQualityService.cs`)**:
+   - Computes score (0–100) based on verified entity links, geocoded coordinates, apply URL validity, and location signals.
+5. **Full-Stack ASP.NET Core REST API (`backend/ChennaiStartupJobsMap.Api`)**:
+   - `GET /api/companies` (with search, hubs, categories, hiring, tech, pagination).
+   - `GET /api/jobs` (with search, hubs, categories, fresher, internship, tech, pagination).
+   - `GET /api/search` (unified query with search intent parsing).
+   - `POST /api/submissions/company` & `POST /api/submissions/job`.
+   - `GET /api/admin/metrics`, `GET /api/admin/ingestion/runs`, `POST /api/admin/ingestion/trigger`.
+
+---
+
+## Local Development & Setup
+
+### Prerequisites
+- Node.js v18+ & npm
+- .NET 10 SDK (or .NET 8+)
+
+### Running Frontend
+```bash
+npm install
+npm run dev
+```
+Open `http://localhost:5173`.
+
+### Running ASP.NET Core Web API Backend
+```bash
+cd backend/ChennaiStartupJobsMap.Api
+dotnet run
+```
+API running on `http://localhost:5241/api`.
+
+### Running Tests
+
+#### Backend xUnit Unit Tests
+```bash
+dotnet test backend/ChennaiStartupJobsMap.Tests/ChennaiStartupJobsMap.Tests.csproj
+```
+
+#### Frontend Vitest Unit Tests
+```bash
+npm test
+```
+
+#### Production Build
+```bash
+npm run build
+```
+
+---
+
+## Environment Variables
+
+Copy `.env.example` to `.env`:
+
+```env
+VITE_API_BASE_URL=http://localhost:5241/api
+DATABASE_CONNECTION_STRING=Host=localhost;Database=chennaistartupjobs;Username=postgres;Password=postgres
+```

@@ -398,7 +398,7 @@ namespace ChennaiStartupJobsMap.Api.Services
 
         public async Task<List<IngestionRun>> GetIngestionRunsAsync()
         {
-            return await _db.Set<IngestionRun>().AsNoTracking().OrderByDescending(r => r.StartedAt).Take(50).ToListAsync();
+            return await _db.IngestionRuns.AsNoTracking().OrderByDescending(r => r.StartedAt).Take(50).ToListAsync();
         }
     }
 }
