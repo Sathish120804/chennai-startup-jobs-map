@@ -64,7 +64,8 @@ const ENGINEERING_PATTERNS: { subcategory: EngineeringSubcategory; patterns: Reg
 ];
 
 const FRESHER_POSITIVE_PATTERNS = [
-  /\bfresher\b/i,
+  /\bfreshers?\b/i,
+  /\bfresh\s+(engineering|graduates?)\b/i,
   /\bentry[- ]?level\b/i,
   /\b0[- ]?1\s*years?\b/i,
   /\b0\s*years?\b/i,
@@ -73,10 +74,8 @@ const FRESHER_POSITIVE_PATTERNS = [
   /\bcollege graduate\b/i,
   /\bcampus\b/i,
   /\bjunior developer\b/i,
-  /\bassociate software engineer\b/i,
-  /\b2024\s*(batch|passout|graduates)\b/i,
-  /\b2025\s*(batch|passout|graduates)\b/i,
-  /\b2026\s*(batch|passout|graduates)\b/i,
+  /\bassociate software (developer|engineer)\b/i,
+  /\b(2024|2025|2026)\b/i,
 ];
 
 const FRESHER_NEGATIVE_PATTERNS = [

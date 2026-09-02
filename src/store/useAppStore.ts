@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand';
+import { create } from 'zustand';
 import { 
   ActiveTab, 
   FilterState, 
@@ -63,29 +63,36 @@ interface AppStoreState {
   setQuickFilter: (filterKey: 'hiring' | 'fresher' | 'engineering' | 'internship' | 'startups' | 'product_companies') => void;
 }
 
+import { parseUrlState, syncStateToUrl } from '../services/urlStateSync';
+
+const initialUrlState = parseUrlState();
+
 const initialFilters: FilterState = {
-  searchQuery: '',
-  selectedHubs: [],
-  selectedCategories: [],
-  selectedCompanyTypes: [],
+  searchQuery: initialUrlState.searchQuery || '',
+  selectedHubs: (initialUrlState.hubs as TechHub[]) || [],
+  selectedCategories: (initialUrlState.categories as CompanyCategory[]) || [],
+  selectedCompanyTypes: (initialUrlState.types as CompanyType[]) || [],
   selectedFundingStages: [],
   selectedExperienceLevels: [],
   selectedWorkplaceTypes: [],
   selectedEngineeringSubcategories: [],
-  selectedTechnologies: [],
-  isHiringOnly: false,
-  isFresherOnly: false,
+  selectedTechnologies: initialUrlState.tech || [],
+  isHiringOnly: initialUrlState.hiring || false,
+  isFresherOnly: initialUrlState.fresher || false,
   isEngineeringOnly: false,
-  isInternshipOnly: false,
+  isInternshipOnly: initialUrlState.internship || false,
   isFeaturedOnly: false,
   selectedRelevance: [],
   selectedFreshness: [],
   sortBy: 'featured',
 };
 
-export const useAppStore = create<AppStoreState>((set) => ({
-  activeTab: 'map',
-  setActiveTab: (tab) => set({ activeTab: tab }),
+export const useAppStore = create<AppStoreState>((set, get) => ({
+  activeTab: initialUrlState.tab || 'map',
+  setActiveTab: (tab) => {
+    set({ activeTab: tab });
+    syncStateToUrl(tab, get().filters);
+  },
 
   selectedCompanyId: null,
   setSelectedCompanyId: (id) => set({ selectedCompanyId: id }),
@@ -111,7 +118,11 @@ export const useAppStore = create<AppStoreState>((set) => ({
   filters: initialFilters,
 
   setSearchQuery: (query) => 
-    set((state) => ({ filters: { ...state.filters, searchQuery: query } })),
+    set((state) => {
+      const nextFilters = { ...state.filters, searchQuery: query };
+      syncStateToUrl(state.activeTab, nextFilters);
+      return { filters: nextFilters };
+    }),
 
   toggleHub: (hub) =>
     set((state) => ({

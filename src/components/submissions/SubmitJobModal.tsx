@@ -1,5 +1,5 @@
-﻿import React, { useState, useMemo } from 'react';
-import { X, Briefcase, MapPin, ExternalLink, CheckCircle2, Sparkles, Send, GraduationCap, Code2 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { X, Briefcase, CheckCircle2, Sparkles, Send, GraduationCap, Code2 } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { db } from '../../services/db';
 import { classifyJob } from '../../services/classifierEngine';
@@ -16,7 +16,7 @@ export const SubmitJobModal: React.FC = () => {
   const [location, setLocation] = useState('Chennai, Tamil Nadu');
   const [descriptionSnippet, setDescriptionSnippet] = useState('');
   const [salaryRange, setSalaryRange] = useState('');
-  const [submittedBy, setSubmittedBy] = useState('');
+  const [submittedBy, setSubmittedBy] = useState('Recruiter / Community Contributor');
   const [email, setEmail] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -42,7 +42,7 @@ export const SubmitJobModal: React.FC = () => {
       descriptionSnippet,
       salaryRange: salaryRange || 'Competitive',
       submittedBy: submittedBy || 'Recruiter / Community Contributor',
-      email,
+      email: email || undefined,
     });
 
     setIsSuccess(true);
@@ -139,6 +139,30 @@ export const SubmitJobModal: React.FC = () => {
                   placeholder="e.g., OMR, DLF Porur, Guindy, Chennai"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Submitted By (Name / Role)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Priya (HR / Recruiter)"
+                  value={submittedBy}
+                  onChange={(e) => setSubmittedBy(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Contact Email (Optional)</label>
+                <input
+                  type="email"
+                  placeholder="recruiter@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>

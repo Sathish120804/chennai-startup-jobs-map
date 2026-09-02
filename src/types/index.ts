@@ -117,6 +117,7 @@ export interface CompanyJobStats {
 export interface Company {
   id: string;
   name: string;
+  normalizedName?: string;
   slug: string;
   tagline: string;
   description: string;
@@ -128,6 +129,7 @@ export interface Company {
   hub: TechHub;
   address: string;
   coordinates: Coordinates;
+  mapPrecision?: 'exact' | 'approximate' | 'area' | 'city';
   foundedYear: number;
   employeeCount: string;
   fundingStage: FundingStage;
@@ -167,6 +169,7 @@ export interface Job {
   companyLogo: string;
   companyHub: TechHub;
   title: string;
+  normalizedTitle?: string;
   slug: string;
   descriptionSnippet: string;
   primaryCategory: CompanyCategory;
@@ -176,15 +179,21 @@ export interface Job {
   jobType: JobType;
   workplaceType: WorkplaceType;
   experienceLevel: ExperienceLevel;
+  experienceMin?: number;
+  experienceMax?: number;
   isFresher: boolean;
   fresherConfidence: number; // 0 to 100
   isInternship: boolean;
   salaryRange?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: string;
   location: string;
   chennaiRelevance: ChennaiRelevance;
   relevanceConfidence: number; // 0 to 100
   sourceName: JobSourceType;
   originalUrl: string;
+  applyUrl?: string;
   sourceRecordId?: string;
   firstSeenAt: string;
   lastSeenAt: string;

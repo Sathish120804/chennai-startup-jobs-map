@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "dEgb2mCOhEY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\sathi\\OneDrive\\Desktop\\chennai-startup-jobs-map\\backend\\ChennaiStartupJobsMap.Api\\ChennaiStartupJobsMap.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sathi\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.0\\microsoft.entityframeworkcore.10.0.0.nupkg.sha512",
+    "C:\\Users\\sathi\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.0\\microsoft.entityframeworkcore.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\sathi\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.0\\microsoft.entityframeworkcore.analyzers.10.0.0.nupkg.sha512",
+    "C:\\Users\\sathi\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\10.0.0\\microsoft.entityframeworkcore.inmemory.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

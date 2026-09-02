@@ -1,4 +1,4 @@
-﻿import { 
+import { 
   Company, 
   Job, 
   EcosystemNews, 
@@ -14,6 +14,7 @@ import { analyzeChennaiRelevance } from './relevanceEngine';
 import { classifyJob } from './classifierEngine';
 import { calculateJobFreshness } from './freshnessEngine';
 import { detectJobDuplicates } from './deduplicationEngine';
+import { parseSearchIntent } from './searchIntentParser';
 
 const STORAGE_KEYS = {
   COMPANIES: 'csjm_companies_v1',
@@ -141,25 +142,48 @@ class DatabaseService {
   }
 
   public getFilteredCompanies(filters: FilterState): Company[] {
+    const parsedIntent = filters.searchQuery.trim() ? parseSearchIntent(filters.searchQuery) : undefined;
+
     return this.companies.filter((company) => {
       const stats = this.getCompanyStats(company.id);
 
-      // Search query (matches name, description, tags, techStack, hub, address)
+      // Search query (matches name, description, tags, techStack, hub, address + intent)
       if (filters.searchQuery.trim()) {
         const q = filters.searchQuery.toLowerCase().trim();
-        const matchesName = company.name.toLowerCase().includes(q);
+        const matchesName = company.name.toLowerCase().includes(q) || (company.normalizedName && company.normalizedName.includes(q));
         const matchesTagline = company.tagline.toLowerCase().includes(q);
         const matchesDesc = company.description.toLowerCase().includes(q);
         const matchesTags = company.tags.some((t) => t.toLowerCase().includes(q));
         const matchesTech = company.techStack.some((t) => t.toLowerCase().includes(q));
         const matchesHub = company.hub.toLowerCase().includes(q);
 
+        // Search Intent checks
+        const matchesIntentTech = parsedIntent?.technology
+          ? company.techStack.includes(parsedIntent.technology) ||
+            this.jobs.some(j => j.companyId === company.id && j.technologies.includes(parsedIntent.technology!))
+          : false;
+        const matchesIntentHub = parsedIntent?.hub ? company.hub === parsedIntent.hub : false;
+        const matchesIntentType = parsedIntent?.companyType ? company.companyTypes.includes(parsedIntent.companyType) : false;
+        const matchesIntentCategory = parsedIntent?.category ? company.categories.includes(parsedIntent.category) : false;
+
         // Also check if any of the company's jobs match the search query!
         const matchingJobs = this.jobs.some(
           (j) => j.companyId === company.id && (j.title.toLowerCase().includes(q) || j.technologies.some(t => t.toLowerCase().includes(q)))
         );
 
-        if (!matchesName && !matchesTagline && !matchesDesc && !matchesTags && !matchesTech && !matchesHub && !matchingJobs) {
+        if (
+          !matchesName && 
+          !matchesTagline && 
+          !matchesDesc && 
+          !matchesTags && 
+          !matchesTech && 
+          !matchesHub && 
+          !matchingJobs && 
+          !matchesIntentTech && 
+          !matchesIntentHub &&
+          !matchesIntentType &&
+          !matchesIntentCategory
+        ) {
           return false;
         }
       }
@@ -261,18 +285,39 @@ class DatabaseService {
   }
 
   public getFilteredJobs(filters: FilterState): Job[] {
+    const parsedIntent = filters.searchQuery.trim() ? parseSearchIntent(filters.searchQuery) : undefined;
+
     return this.jobs.filter((job) => {
-      // Search query (title, description, technologies, companyName, hub)
+      // Search query (title, description, technologies, companyName, hub + intent)
       if (filters.searchQuery.trim()) {
         const q = filters.searchQuery.toLowerCase().trim();
-        const matchesTitle = job.title.toLowerCase().includes(q);
+        const matchesTitle = job.title.toLowerCase().includes(q) || (job.normalizedTitle && job.normalizedTitle.includes(q));
         const matchesDesc = job.descriptionSnippet.toLowerCase().includes(q);
         const matchesCompany = job.companyName.toLowerCase().includes(q);
         const matchesHub = job.companyHub.toLowerCase().includes(q);
         const matchesTech = job.technologies.some((t) => t.toLowerCase().includes(q));
         const matchesSubcat = job.engineeringSubcategory?.toLowerCase().includes(q);
 
-        if (!matchesTitle && !matchesDesc && !matchesCompany && !matchesHub && !matchesTech && !matchesSubcat) {
+        // Search intent matches
+        const matchesIntentTech = parsedIntent?.technology ? job.technologies.includes(parsedIntent.technology) : false;
+        const matchesIntentFresher = parsedIntent?.isFresher ? job.isFresher : false;
+        const matchesIntentIntern = parsedIntent?.isInternship ? job.isInternship : false;
+        const matchesIntentHub = parsedIntent?.hub ? job.companyHub === parsedIntent.hub : false;
+        const matchesIntentCat = parsedIntent?.category ? job.primaryCategory === parsedIntent.category : false;
+
+        if (
+          !matchesTitle && 
+          !matchesDesc && 
+          !matchesCompany && 
+          !matchesHub && 
+          !matchesTech && 
+          !matchesSubcat && 
+          !matchesIntentTech &&
+          !matchesIntentFresher &&
+          !matchesIntentIntern &&
+          !matchesIntentHub &&
+          !matchesIntentCat
+        ) {
           return false;
         }
       }

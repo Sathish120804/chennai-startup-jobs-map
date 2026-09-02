@@ -1,5 +1,5 @@
-﻿import React, { useState } from 'react';
-import { X, Building2, MapPin, Globe, CheckCircle2, Sparkles, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Building2, CheckCircle2, Send } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import { db } from '../../services/db';
 import { CHENNAI_TECH_HUBS } from '../../config/constants';
@@ -15,7 +15,7 @@ export const SubmitCompanyModal: React.FC = () => {
   const [hub, setHub] = useState<TechHub>('OMR (IT Corridor)');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
-  const [submittedBy, setSubmittedBy] = useState('');
+  const [submittedBy, setSubmittedBy] = useState('Community Member');
   const [email, setEmail] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -32,8 +32,8 @@ export const SubmitCompanyModal: React.FC = () => {
       hub,
       address: address || `${hub}, Chennai, Tamil Nadu`,
       description,
-      submittedBy: submittedBy || 'Community Contributor',
-      email,
+      submittedBy: submittedBy || 'Community Member',
+      email: email || undefined,
     });
 
     setIsSuccess(true);
@@ -144,6 +144,30 @@ export const SubmitCompanyModal: React.FC = () => {
                   placeholder="e.g., Tidel Park 4th Floor, Tharamani"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Your Name / Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g., Alex (Founder / Employee)"
+                  value={submittedBy}
+                  onChange={(e) => setSubmittedBy(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-slate-700">Contact Email (Optional)</label>
+                <input
+                  type="email"
+                  placeholder="contact@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>

@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useAppStore } from '../../store/useAppStore';
@@ -7,13 +7,9 @@ import { APP_CONFIG, CHENNAI_TECH_HUBS } from '../../config/constants';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { 
-  Building2, 
   Briefcase, 
-  MapPin, 
   Navigation, 
-  Sparkles, 
   CheckCircle2, 
-  ExternalLink,
   GraduationCap
 } from 'lucide-react';
 import { Company } from '../../types';
@@ -59,7 +55,6 @@ export const ChennaiMap: React.FC = () => {
   const createCompanyIcon = (company: Company, isSelected: boolean, isHovered: boolean) => {
     const stats = db.getCompanyStats(company.id);
     const hasJobs = stats.activeJobsCount > 0;
-    const hasFresher = stats.fresherJobsCount > 0;
 
     let bgColor = hasJobs ? '#0284c7' : '#475569';
     let ringColor = isSelected ? '#f59e0b' : isHovered ? '#38bdf8' : hasJobs ? '#10b981' : '#cbd5e1';

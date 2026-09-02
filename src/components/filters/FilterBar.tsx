@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { 
   Search, 
   SlidersHorizontal, 
@@ -14,7 +14,6 @@ import {
 import { useAppStore } from '../../store/useAppStore';
 import { CHENNAI_TECH_HUBS } from '../../config/constants';
 import { Button } from '../ui/Button';
-import { Badge } from '../ui/Badge';
 
 export const FilterBar: React.FC = () => {
   const { 
