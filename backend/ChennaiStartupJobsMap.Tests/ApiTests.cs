@@ -60,5 +60,39 @@ namespace ChennaiStartupJobsMap.Tests
             Assert.Equal(".NET", response.Intent.Technology);
             Assert.True(response.Intent.IsFresher);
         }
+
+        [Fact]
+        public void NormalizationService_NormalizesTitlesAndExtractsTech()
+        {
+            var norm = new NormalizationService();
+            var title = norm.NormalizeTitle("Associate Software Engineer (.NET & React)");
+            var techs = norm.ExtractTechnologies("Looking for React, Python, and C# developer.");
+
+            Assert.Equal("associate software engineer net react", title);
+            Assert.Contains("React", techs);
+            Assert.Contains("Python", techs);
+            Assert.Contains("C#", techs);
+        }
+
+        [Fact]
+        public async Task IngestionPipeline_RunsIdempotentDiscoveryWithoutDuplicates()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var matcher = new CompanyMatcher(db, norm);
+            var pipeline = new IngestionPipelineService(db, norm, matcher);
+
+            var run1 = await pipeline.RunMockDiscoveryIngestionAsync();
+            var initialJobsCount = await db.Jobs.CountAsync();
+
+            // Re-run same ingestion
+            var run2 = await pipeline.RunMockDiscoveryIngestionAsync();
+            var finalJobsCount = await db.Jobs.CountAsync();
+
+            Assert.Equal("COMPLETED", run1.Status);
+            Assert.Equal("COMPLETED", run2.Status);
+            Assert.Equal(initialJobsCount, finalJobsCount); // Idempotency check: no duplicates created!
+            Assert.True(run2.DuplicatesFound > 0);
+        }
     }
 }

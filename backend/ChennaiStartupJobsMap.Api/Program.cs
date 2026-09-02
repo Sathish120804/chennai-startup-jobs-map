@@ -19,6 +19,11 @@ builder.Services.AddDbContext<ChennaiDbContext>(options =>
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddSingleton<ISourceRegistryService, SourceRegistryService>();
+builder.Services.AddSingleton<INormalizationService, NormalizationService>();
+builder.Services.AddScoped<ICompanyMatcher, CompanyMatcher>();
+builder.Services.AddSingleton<IDataQualityService, DataQualityService>();
+builder.Services.AddScoped<IIngestionPipelineService, IngestionPipelineService>();
 
 // CORS Policy Configuration
 builder.Services.AddCors(options =>

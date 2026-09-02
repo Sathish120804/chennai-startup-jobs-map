@@ -15,6 +15,7 @@ namespace ChennaiStartupJobsMap.Api.Data
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<UserSubmission> Submissions => Set<UserSubmission>();
         public DbSet<RawIngestionRecord> RawIngestionRecords => Set<RawIngestionRecord>();
+        public DbSet<IngestionRun> IngestionRuns => Set<IngestionRun>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
