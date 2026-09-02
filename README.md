@@ -2,9 +2,11 @@
 
 > An independent Chennai-focused startup, company, tech ecosystem, and automated job discovery platform.
 
-[![Status](https://img.shields.io/badge/status-Milestone--5--Complete-emerald)](#current-status)
+[![Status](https://img.shields.io/badge/status-Milestone--6--Enterprise--Complete-emerald)](#current-status)
 [![Frontend](https://img.shields.io/badge/frontend-React%2018%20%7C%20TypeScript%20%7C%20Vite%20%7C%20Tailwind-blue)](#technology-stack)
 [![Backend](https://img.shields.io/badge/backend-ASP.NET%20Core%20Web%20API%20%7C%20.NET%2010-purple)](#technology-stack)
+[![Swagger](https://img.shields.io/badge/OpenAPI%20v3-Swagger%20UI-brightgreen)](http://localhost:5241/swagger)
+[![Hangfire](https://img.shields.io/badge/jobs-Hangfire%20Scheduler-red)](http://localhost:5241/hangfire)
 [![Database](https://img.shields.io/badge/database-EF%20Core%20%7C%20PostgreSQL-blue)](#technology-stack)
 
 ---
@@ -15,7 +17,7 @@
 
 ---
 
-## Architecture Overview
+## Enterprise Architecture Overview
 
 ```text
        ┌────────────────────────────────────────────────────────┐
@@ -28,45 +30,75 @@
                                   │
                                   ▼
        ┌────────────────────────────────────────────────────────┐
-       │             ASP.NET Core Web API (.NET 10)            │
-       │  (CompaniesController, JobsController, SearchController)│
-       └──────────────────────────┬─────────────────────────────┘
-                                  │
-                                  ▼
-       ┌────────────────────────────────────────────────────────┐
-       │             Automated Data Ingestion Pipeline          │
-       │ (Discovery -> Normalize -> Match -> Deduplicate -> Verify)│
-       └──────────────────────────┬─────────────────────────────┘
-                                  │
+       │      ASP.NET Core Web API (.NET 10) — /api/v1/         │
+       │  (Swagger UI, JWT Bearer, RateLimiter, CORS, Logging)  │
+       └──────────┬───────────────────────────────┬─────────────┘
+                  │                               │
+                  ▼                               ▼
+       ┌──────────────────────┐       ┌────────────────────────┐
+       │ Hangfire Background  │       │ Role-Based Auth Engine │
+       │ Job Scheduler        │       │ (Admin, Moderator,     │
+       │ (/hangfire)          │       │  Recruiter, User)      │
+       └──────────┬───────────┘       └───────────┬────────────┘
+                  │                               │
+                  └───────────────┬───────────────┘
                                   ▼
        ┌────────────────────────────────────────────────────────┐
        │        Entity Framework Core Relational Data Layer      │
-       │     (Companies, Jobs, Technologies, IngestionRuns)     │
+       │     (Users, Companies, Jobs, IngestionRuns, Sources)   │
        └────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Key Milestone 5 Features
+## Milestone 6 Enterprise Features
 
-1. **Automated Ingestion Pipeline (`IngestionPipelineService.cs`)**:
-   - Source Registry supporting `COMPANY_CAREERS`, `GREENHOUSE_ATS`, `LEVER_ATS`, `WORKDAY_ATS`, `AUTHORIZED_SEARCH_API`, `USER_SUBMISSION`.
-   - Ingestion run tracking (`IngestionRun` model) & raw payload logging.
-   - Idempotent execution: running discovery repeatedly updates existing postings without creating duplicates.
-2. **Title, Company & Location Normalization (`NormalizationService.cs`)**:
-   - Extracts technology tags (`.NET`, `React`, `Python`, `Java`, `Spring Boot`, `AWS`, `PostgreSQL`, `C#`).
-   - Rule-based fresher classification & internship detection.
-3. **Company Matching & Job Deduplication (`CompanyMatcher.cs`)**:
-   - Matches incoming job postings to existing Chennai companies via domain names, normalized titles, and aliases with confidence scoring (`HIGH`, `MEDIUM`, `LOW`).
-   - Preserves multi-portal source attribution (`JobSourceRecord`).
-4. **Data Quality Scoring (`DataQualityService.cs`)**:
-   - Computes score (0–100) based on verified entity links, geocoded coordinates, apply URL validity, and location signals.
-5. **Full-Stack ASP.NET Core REST API (`backend/ChennaiStartupJobsMap.Api`)**:
-   - `GET /api/companies` (with search, hubs, categories, hiring, tech, pagination).
-   - `GET /api/jobs` (with search, hubs, categories, fresher, internship, tech, pagination).
-   - `GET /api/search` (unified query with search intent parsing).
-   - `POST /api/submissions/company` & `POST /api/submissions/job`.
-   - `GET /api/admin/metrics`, `GET /api/admin/ingestion/runs`, `POST /api/admin/ingestion/trigger`.
+1. **Swagger / OpenAPI v3 Portal (`/swagger`)**:
+   - Interactive public API explorer with JWT Bearer authentication (`Bearer <token>`).
+   - Grouped by tags: `Authentication & Identity`, `Companies & Startups`, `Jobs & Internships`, `Unified Search`, `Admin & Moderation`, `Community Submissions`, and `Health Checks`.
+   - Comprehensive XML comments, parameter documentation, and response schemas.
+
+2. **JWT Authentication & Refresh Tokens (`/api/v1/auth`)**:
+   - `POST /api/v1/auth/register` — Register User / Recruiter.
+   - `POST /api/v1/auth/login` — Authenticate and receive JWT access token (4-hour) & refresh token (7-day).
+   - `POST /api/v1/auth/refresh` — Rotate refresh tokens and refresh access tokens.
+   - `POST /api/v1/auth/logout` & `GET /api/v1/auth/me`.
+   - Identity Password Hashing with cryptographic salting.
+
+3. **Role-Based Policy Authorization**:
+   - `ADMIN` — Full access to metrics, ingestion pipelines, triggers, and user management.
+   - `MODERATOR` — Review and moderate incoming community company and job submissions.
+   - `RECRUITER` — Manage company job vacancies and talent pipelines.
+   - `USER` — Search, browse, save jobs, and submit new companies/jobs.
+
+4. **Hangfire Background Job Scheduler (`/hangfire`)**:
+   - `job-discovery-job` — Hourly automated Chennai career portal poller.
+   - `verification-job` — Daily job status and link verification sweep.
+   - `expire-stale-jobs-job` — Daily expiration of vacancies older than 60 days.
+
+5. **Automated Data Ingestion & Quality Scoring**:
+   - Source Registry supporting ATS, company career pages, and search feeds.
+   - Company matching via domain, normalized name, and aliases with confidence rating.
+   - Data quality scoring (0–100) with diagnostic breakdown.
+
+6. **System Health & Observability (`/health` & `/api/v1/health`)**:
+   - Live diagnostics for database connectivity, Hangfire engine, cache, and API latency.
+
+7. **Containerization**:
+   - Production multi-stage `Dockerfile` and `docker-compose.yml` for API and PostgreSQL.
+
+---
+
+## Default Seeded Accounts
+
+For testing authentication in Swagger or via API:
+
+| Role | Email | Password |
+|---|---|---|
+| **ADMIN** | `admin@chennaistartups.in` | `Chennai@2026` |
+| **MODERATOR** | `moderator@chennaistartups.in` | `Chennai@2026` |
+| **RECRUITER** | `recruiter@zoho.com` | `Chennai@2026` |
+| **USER** | `user@chennaistartups.in` | `Chennai@2026` |
 
 ---
 
@@ -75,45 +107,45 @@
 ### Prerequisites
 - Node.js v18+ & npm
 - .NET 10 SDK (or .NET 8+)
+- Docker & Docker Compose (optional for containerized deployment)
 
-### Running Frontend
+### Running Backend API (.NET)
+```bash
+cd backend/ChennaiStartupJobsMap.Api
+dotnet run
+```
+- API Base: `http://localhost:5241/api/v1`
+- Swagger UI: `http://localhost:5241/swagger`
+- Hangfire Dashboard: `http://localhost:5241/hangfire`
+- Health Endpoint: `http://localhost:5241/health`
+
+### Running Frontend (React)
 ```bash
 npm install
 npm run dev
 ```
 Open `http://localhost:5173`.
 
-### Running ASP.NET Core Web API Backend
+### Running with Docker Compose
 ```bash
-cd backend/ChennaiStartupJobsMap.Api
-dotnet run
-```
-API running on `http://localhost:5241/api`.
-
-### Running Tests
-
-#### Backend xUnit Unit Tests
-```bash
-dotnet test backend/ChennaiStartupJobsMap.Tests/ChennaiStartupJobsMap.Tests.csproj
-```
-
-#### Frontend Vitest Unit Tests
-```bash
-npm test
-```
-
-#### Production Build
-```bash
-npm run build
+docker-compose up --build
 ```
 
 ---
 
-## Environment Variables
+## Automated Test Suites
 
-Copy `.env.example` to `.env`:
+### Backend xUnit Unit Tests (8/8 Passed)
+```bash
+dotnet test backend/ChennaiStartupJobsMap.Tests/ChennaiStartupJobsMap.Tests.csproj
+```
 
-```env
-VITE_API_BASE_URL=http://localhost:5241/api
-DATABASE_CONNECTION_STRING=Host=localhost;Database=chennaistartupjobs;Username=postgres;Password=postgres
+### Frontend Vitest Engine Tests (9/9 Passed)
+```bash
+npm test
+```
+
+### Production Build
+```bash
+npm run build
 ```

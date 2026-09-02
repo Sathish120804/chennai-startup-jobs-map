@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Xunit;
+using ChennaiStartupJobsMap.Api.Authentication;
 using ChennaiStartupJobsMap.Api.Data;
+using ChennaiStartupJobsMap.Api.DTOs;
+using ChennaiStartupJobsMap.Api.Entities;
 using ChennaiStartupJobsMap.Api.Services;
 
 namespace ChennaiStartupJobsMap.Tests
@@ -17,6 +21,92 @@ namespace ChennaiStartupJobsMap.Tests
             var db = new ChennaiDbContext(options);
             db.Database.EnsureCreated();
             return db;
+        }
+
+        private IConfiguration GetMockConfiguration()
+        {
+            var inMemorySettings = new System.Collections.Generic.Dictionary<string, string?>
+            {
+                { "Jwt:SecretKey", "ChennaiStartupJobsMapSuperSecretEnterpriseSigningKey2026" },
+                { "Jwt:Issuer", "ChennaiStartupJobsMap" },
+                { "Jwt:Audience", "ChennaiStartupJobsMapAudience" }
+            };
+
+            return new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+        }
+
+        [Fact]
+        public async Task AuthService_RegistersUserAndReturnsTokens()
+        {
+            using var db = GetInMemoryDbContext();
+            var config = GetMockConfiguration();
+            var jwt = new JwtTokenService(config);
+            var auth = new AuthService(db, jwt);
+
+            var registerDto = new RegisterRequestDto
+            {
+                Name = "Test Developer",
+                Email = "dev@chennaistartup.test",
+                Password = "Password@123",
+                Role = UserRoles.User
+            };
+
+            var response = await auth.RegisterAsync(registerDto);
+
+            Assert.True(response.Success);
+            Assert.NotNull(response.Data);
+            Assert.NotEmpty(response.Data.Token);
+            Assert.NotEmpty(response.Data.RefreshToken);
+            Assert.Equal("dev@chennaistartup.test", response.Data.User.Email);
+        }
+
+        [Fact]
+        public async Task AuthService_AuthenticatesValidCredentials()
+        {
+            using var db = GetInMemoryDbContext();
+            var config = GetMockConfiguration();
+            var jwt = new JwtTokenService(config);
+            var auth = new AuthService(db, jwt);
+
+            // Register user
+            await auth.RegisterAsync(new RegisterRequestDto
+            {
+                Name = "Login User",
+                Email = "login@chennaistartup.test",
+                Password = "SecretPassword123",
+                Role = UserRoles.User
+            });
+
+            // Login
+            var loginResponse = await auth.LoginAsync(new LoginRequestDto
+            {
+                Email = "login@chennaistartup.test",
+                Password = "SecretPassword123"
+            });
+
+            Assert.True(loginResponse.Success);
+            Assert.NotNull(loginResponse.Data);
+            Assert.NotEmpty(loginResponse.Data.Token);
+        }
+
+        [Fact]
+        public async Task AuthService_RejectsInvalidCredentials()
+        {
+            using var db = GetInMemoryDbContext();
+            var config = GetMockConfiguration();
+            var jwt = new JwtTokenService(config);
+            var auth = new AuthService(db, jwt);
+
+            var response = await auth.LoginAsync(new LoginRequestDto
+            {
+                Email = "nonexistent@test.com",
+                Password = "WrongPassword"
+            });
+
+            Assert.False(response.Success);
+            Assert.Null(response.Data);
         }
 
         [Fact]

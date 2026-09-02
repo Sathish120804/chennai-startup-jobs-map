@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./backend/ChennaiStartupJobsMap.Api
+      dockerfile: Dockerfile
+    container_name: chennai-jobs-api
+    ports:
+      - "5241:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=chennaistartupjobs;Username=postgres;Password=chennaisecret
+      - Jwt__SecretKey=ChennaiStartupJobsMapSuperSecretEnterpriseSigningKey2026
+      - Jwt__Issuer=ChennaiStartupJobsMap
+      - Jwt__Audience=ChennaiStartupJobsMapAudience
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: chennai-jobs-postgres
+    environment:
+      - POSTGRES_DB=chennaistartupjobs
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=chennaisecret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

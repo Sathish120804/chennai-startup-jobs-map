@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ChennaiStartupJobsMap.Api.Models;
+using ChennaiStartupJobsMap.Api.Entities;
 
 namespace ChennaiStartupJobsMap.Api.Data
 {
@@ -9,6 +11,7 @@ namespace ChennaiStartupJobsMap.Api.Data
     {
         public ChennaiDbContext(DbContextOptions<ChennaiDbContext> options) : base(options) { }
 
+        public DbSet<User> Users => Set<User>();
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Job> Jobs => Set<Job>();
         public DbSet<Technology> Technologies => Set<Technology>();
@@ -241,6 +244,60 @@ namespace ChennaiStartupJobsMap.Api.Data
             };
 
             modelBuilder.Entity<Job>().HasData(job1, job2);
+
+            // Pre-hashed "Chennai@2026"
+            var defaultPasswordHash = "vN/1fEw76LdJ14wXlD3F14l5f9U1lH/eQ+F5uK4jE1w=";
+
+            var adminUser = new User
+            {
+                Id = "usr-admin-1",
+                Name = "Chennai Admin",
+                Email = "admin@chennaistartups.in",
+                PasswordHash = defaultPasswordHash,
+                Role = UserRoles.Admin,
+                IsVerified = true,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            };
+
+            var modUser = new User
+            {
+                Id = "usr-mod-1",
+                Name = "Ecosystem Moderator",
+                Email = "moderator@chennaistartups.in",
+                PasswordHash = defaultPasswordHash,
+                Role = UserRoles.Moderator,
+                IsVerified = true,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            };
+
+            var recruiterUser = new User
+            {
+                Id = "usr-recruiter-1",
+                Name = "Zoho Talent Team",
+                Email = "recruiter@zoho.com",
+                PasswordHash = defaultPasswordHash,
+                Role = UserRoles.Recruiter,
+                CompanyId = "comp-1",
+                IsVerified = true,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            };
+
+            var demoUser = new User
+            {
+                Id = "usr-demo-1",
+                Name = "Karthik Developer",
+                Email = "user@chennaistartups.in",
+                PasswordHash = defaultPasswordHash,
+                Role = UserRoles.User,
+                IsVerified = true,
+                CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            };
+
+            modelBuilder.Entity<User>().HasData(adminUser, modUser, recruiterUser, demoUser);
         }
     }
 }

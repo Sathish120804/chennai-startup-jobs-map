@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChennaiStartupJobsMap.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8297dfbfa938c5b2f932b2fc22365b82393c01a1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b597d0141b6fc36c6924fe041b1ebe628418566c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChennaiStartupJobsMap.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChennaiStartupJobsMap.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

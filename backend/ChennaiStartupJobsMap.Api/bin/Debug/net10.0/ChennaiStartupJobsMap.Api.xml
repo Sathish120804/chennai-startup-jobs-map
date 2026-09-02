@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ChennaiStartupJobsMap.Api</name>
+    </assembly>
+    <members>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController">
+            <summary>
+            Admin Dashboard and Moderation Controls.
+            Provides metrics, ingestion management, data quality diagnostics, and submission moderation.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetAdminMetrics">
+            <summary>
+            Get ecosystem metrics and database counts.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetSources">
+            <summary>
+            Get registered data discovery sources and trust levels.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetIngestionRuns">
+            <summary>
+            Retrieve ingestion execution history runs.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.TriggerIngestion(System.String)">
+            <summary>
+            Trigger an automated data discovery ingestion run.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetCompanyQualityScore(System.String)">
+            <summary>
+            Calculate data quality score for a company entity.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetJobQualityScore(System.String)">
+            <summary>
+            Calculate data quality score for a job posting.
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController">
+            <summary>
+            Authentication and Identity Operations for Chennai Startup and Jobs Map.
+            Provides JWT token issuance, refresh token rotation, user registration, and profile queries.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController.Register(ChennaiStartupJobsMap.Api.DTOs.RegisterRequestDto)">
+            <summary>
+            Register a new user account.
+            </summary>
+            <param name="request">User registration details including email, password, and optional role (USER or RECRUITER).</param>
+            <response code="200">Registration successful with generated JWT token and refresh token.</response>
+            <response code="400">Validation error or email address already registered.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController.Login(ChennaiStartupJobsMap.Api.DTOs.LoginRequestDto)">
+            <summary>
+            Authenticate user credentials and return JWT bearer token.
+            </summary>
+            <param name="request">User login credentials.</param>
+            <response code="200">Login successful. Returns JWT access token (4-hour lifetime) and refresh token (7-day lifetime).</response>
+            <response code="400">Invalid credentials provided.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController.RefreshToken(ChennaiStartupJobsMap.Api.DTOs.RefreshTokenRequestDto)">
+            <summary>
+            Refresh an expired JWT access token using a valid refresh token.
+            </summary>
+            <param name="request">Refresh token string.</param>
+            <response code="200">New JWT access token and rotated refresh token.</response>
+            <response code="400">Refresh token is invalid or has expired.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController.Logout">
+            <summary>
+            Logout user and invalidate active refresh tokens.
+            </summary>
+            <response code="200">Logout successful.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AuthController.GetMe">
+            <summary>
+            Get profile information of currently authenticated user.
+            </summary>
+            <response code="200">User profile details including name, email, verified status, and assigned role.</response>
+            <response code="401">Unauthorized request if token is missing or expired.</response>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController">
+            <summary>
+            Company and Startup Management in Chennai.
+            Provides search, filtering across IT corridors (OMR, Guindy, Siruseri, etc.), and company profiles.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.GetCompanies(System.String,System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Retrieve a paginated list of Chennai tech companies and startups matching criteria.
+            </summary>
+            <param name="q">Optional search query (e.g. "SaaS", "Zoho", "Fintech").</param>
+            <param name="hubs">Comma-delimited corridor list (e.g. "OMR (IT Corridor),Guindy and Ekkatuthangal").</param>
+            <param name="categories">Comma-delimited sector list (e.g. "SaaS / Enterprise Software").</param>
+            <param name="types">Comma-delimited company types (e.g. "Startup,Unicorn").</param>
+            <param name="hiring">Filter only currently hiring companies.</param>
+            <param name="fresher">Filter companies offering fresher roles.</param>
+            <param name="tech">Comma-delimited tech stack keywords (e.g. "React,.NET,Python").</param>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Items per page (default: 20, max: 100).</param>
+            <param name="sortBy">Sort field: "featured", "jobsCount", "foundedYear", "name".</param>
+            <response code="200">Paginated company results with total count and metadata.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.GetCompanyById(System.String)">
+            <summary>
+            Get company details by unique ID.
+            </summary>
+            <param name="id">Company unique identifier (e.g. "comp-1").</param>
+            <response code="200">Company entity details.</response>
+            <response code="404">Company with specified ID does not exist.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.GetCompanyBySlug(System.String)">
+            <summary>
+            Get company profile by URL slug.
+            </summary>
+            <param name="slug">Company URL slug (e.g. "zoho-corporation").</param>
+            <response code="200">Company details.</response>
+            <response code="404">Company with specified slug not found.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.CompaniesController.CreateCompany(ChennaiStartupJobsMap.Api.DTOs.SubmitCompanyRequest)">
+            <summary>
+            Create a new company record (Moderator or Admin only).
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.HealthController">
+            <summary>
+            System Health and Observability.
+            Provides live health checks for database connectivity, background job processor, and API latency.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.HealthController.GetHealth">
+            <summary>
+            Check system status and component health.
+            </summary>
+            <response code="200">System is operational.</response>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController">
+            <summary>
+            Tech Job and Internship Vacancies across Chennai.
+            Provides search, corridor filtering, fresher classification, and application links.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController.GetJobs(System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String,System.Int32,System.Int32)">
+            <summary>
+            Retrieve a paginated list of Chennai jobs with advanced filters.
+            </summary>
+            <param name="q">Search query (e.g. "React", "Frontend", ".NET").</param>
+            <param name="hubs">Comma-delimited Chennai tech hubs.</param>
+            <param name="categories">Comma-delimited sector domains.</param>
+            <param name="fresher">Filter only fresher / entry-level roles (0-1 yrs).</param>
+            <param name="internship">Filter internship vacancies.</param>
+            <param name="engineering">Filter engineering and tech software roles.</param>
+            <param name="tech">Filter by specific technologies (e.g. "React,.NET").</param>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Page size (default: 20).</param>
+            <response code="200">Paginated job vacancies.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController.GetJobById(System.String)">
+            <summary>
+            Get job details by unique ID.
+            </summary>
+            <param name="id">Job identifier (e.g. "job-1").</param>
+            <response code="200">Job vacancy details.</response>
+            <response code="404">Job not found.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.JobsController.CreateJob(ChennaiStartupJobsMap.Api.DTOs.SubmitJobRequest)">
+            <summary>
+            Create a new job vacancy (Recruiter or Admin only).
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.SearchController">
+            <summary>
+            Intelligent Multi-Entity Search API.
+            Analyzes natural language intent ("dotnet fresher OMR", "React internship Chennai") and returns unified results.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SearchController.Search(System.String)">
+            <summary>
+            Perform an intent-aware unified search across Chennai companies and active jobs.
+            </summary>
+            <param name="q">Natural language search query (e.g. "dotnet fresher chennai", "ai startups guindy").</param>
+            <response code="200">Unified search response with extracted intent, matching companies, and matching jobs.</response>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController">
+            <summary>
+            Community and Recruiter Submissions.
+            Allows users to submit new Chennai startups or job vacancies for moderation.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController.SubmitCompany(ChennaiStartupJobsMap.Api.DTOs.SubmitCompanyRequest)">
+            <summary>
+            Submit a Chennai company for indexing.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController.SubmitJob(ChennaiStartupJobsMap.Api.DTOs.SubmitJobRequest)">
+            <summary>
+            Submit a job vacancy for indexing.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController.GetSubmissionStatus(System.String)">
+            <summary>
+            Check moderation status of a submission.
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>
