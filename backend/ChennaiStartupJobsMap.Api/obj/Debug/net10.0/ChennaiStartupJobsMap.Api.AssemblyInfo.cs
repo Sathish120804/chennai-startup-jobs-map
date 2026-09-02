@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChennaiStartupJobsMap.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b597d0141b6fc36c6924fe041b1ebe628418566c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8fbb22cce44533d7ea8a7b4daf47ac6e29e9ddb8")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChennaiStartupJobsMap.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChennaiStartupJobsMap.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

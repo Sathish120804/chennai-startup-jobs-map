@@ -1,8 +1,10 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from './components/layout/Layout';
 import { ChennaiMap } from './components/map/ChennaiMap';
 import { CompanyGrid } from './components/directory/CompanyGrid';
 import { JobList } from './components/jobs/JobList';
+import { RecommendedJobs } from './components/jobs/RecommendedJobs';
+import { CreatorStory } from './components/home/CreatorStory';
 import { EcosystemPulse } from './components/ecosystem/EcosystemPulse';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { FilterBar } from './components/filters/FilterBar';
@@ -68,11 +70,11 @@ export const App: React.FC = () => {
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                Discover Chennai's <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-300 via-teal-200 to-amber-200">Startups, Tech Parks & Jobs</span>
+                Find where Chennai's <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-300 via-teal-200 to-amber-200">opportunities are.</span>
               </h1>
 
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
-                Explore South Asia's SaaS and DeepTech capital on an interactive map. Discover company headquarters across OMR, Guindy, and DLF Porur, filter by engineering stack or fresher opportunities, and apply directly to verified vacancies.
+                Explore companies, startups and jobs across Chennai — on one map. Built by an engineer who knows how difficult the first opportunity can be.
               </p>
 
               {/* Fast navigation buttons */}
@@ -134,6 +136,11 @@ export const App: React.FC = () => {
         {/* Global Filter Bar */}
         {activeTab !== 'admin' && activeTab !== 'ecosystem' && (
           <FilterBar />
+        )}
+
+        {/* AI Recommendations Section */}
+        {(activeTab === 'map' || activeTab === 'directory' || activeTab === 'jobs') && (
+          <RecommendedJobs />
         )}
 
         {/* Main View Switcher */}
@@ -199,6 +206,11 @@ export const App: React.FC = () => {
             <AdminDashboard />
           )}
         </section>
+
+        {/* Authentic Creator Story on Homepage */}
+        {(activeTab === 'map' || activeTab === 'directory') && (
+          <CreatorStory />
+        )}
       </div>
 
       {/* Global Modals & Drawers */}

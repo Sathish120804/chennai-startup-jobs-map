@@ -18,6 +18,7 @@ using ChennaiStartupJobsMap.Api.Entities;
 using ChennaiStartupJobsMap.Api.Middleware;
 using ChennaiStartupJobsMap.Api.Repositories;
 using ChennaiStartupJobsMap.Api.Services;
+using ChennaiStartupJobsMap.Api.Services.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,8 @@ builder.Services.AddScoped<ICompanyMatcher, CompanyMatcher>();
 builder.Services.AddSingleton<IDataQualityService, DataQualityService>();
 builder.Services.AddScoped<IIngestionPipelineService, IngestionPipelineService>();
 builder.Services.AddScoped<IBackgroundJobManager, BackgroundJobManager>();
+builder.Services.AddSingleton<IEmbeddingProvider, DeterministicEmbeddingProvider>();
+builder.Services.AddScoped<IJobRecommendationService, JobRecommendationService>();
 
 // 7. Swagger / OpenAPI Configuration with JWT Bearer Security & XML Comments
 builder.Services.AddSwaggerGen(c =>

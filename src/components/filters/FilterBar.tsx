@@ -57,7 +57,7 @@ export const FilterBar: React.FC = () => {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search companies (Zoho, Kissflow...), roles (.NET, Java, React), or hubs (OMR, Guindy)..."
+            placeholder="Try '.NET fresher Chennai', 'React internship OMR', or 'AI startups'..."
             value={filters.searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-slate-50 hover:bg-slate-100/70 focus:bg-white text-sm text-slate-900 placeholder:text-slate-400 rounded-xl pl-10 pr-9 py-2.5 border border-slate-200 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all"
@@ -93,13 +93,37 @@ export const FilterBar: React.FC = () => {
               variant="ghost"
               size="md"
               onClick={resetFilters}
-              className="text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+              className="text-slate-500 hover:text-slate-700"
             >
               Reset
             </Button>
           )}
         </div>
       </div>
+
+      {/* Smart Search Suggestion Chips */}
+      {!filters.searchQuery && (
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 text-xs text-slate-500">
+          <span className="inline-flex items-center gap-1 font-semibold text-slate-600 shrink-0">
+            <Sparkles className="w-3.5 h-3.5 text-brand-500" />
+            <span>Smart Suggestions:</span>
+          </span>
+          {[
+            '.NET fresher Chennai',
+            'React internship OMR',
+            'AI startups Chennai',
+            'Frontend engineer Guindy'
+          ].map((suggestion) => (
+            <button
+              key={suggestion}
+              onClick={() => setSearchQuery(suggestion)}
+              className="px-2.5 py-1 rounded-lg bg-slate-100/80 hover:bg-brand-50 hover:text-brand-700 hover:border-brand-200 border border-slate-200/70 text-slate-600 shrink-0 transition-colors text-[11px] font-medium"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Quick Filter Buttons & Corridors Row */}
       <div className="flex flex-wrap items-center gap-1.5 pt-1">

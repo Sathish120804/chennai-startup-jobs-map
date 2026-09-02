@@ -172,6 +172,34 @@
             Create a new job vacancy (Recruiter or Admin only).
             </summary>
         </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.RecommendationsController">
+            <summary>
+            AI-Powered Recommendations Engine.
+            Recommends Chennai jobs and tech companies using semantic similarity, skill matching, and location proximity.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecommendationsController.GetJobRecommendations(System.String,System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Int32)">
+            <summary>
+            Get smart job recommendations with match scores and explainable "Why this matches" reasoning.
+            </summary>
+            <param name="q">Natural language profile / search query (e.g. "React developer looking for entry level roles in OMR").</param>
+            <param name="tech">Comma-delimited candidate skills / technologies (e.g. ".NET,React,Python").</param>
+            <param name="hub">Preferred Chennai corridor (e.g. "OMR", "Guindy", "Siruseri").</param>
+            <param name="fresher">Filter for fresher / entry-level opportunities.</param>
+            <param name="internship">Filter for internship vacancies.</param>
+            <param name="limit">Maximum number of recommendations to return (default: 6).</param>
+            <response code="200">Ranked job recommendations with match scores and match reasons.</response>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.RecommendationsController.GetCompanyRecommendations(System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Get smart company recommendations matching user preferences or industry interests.
+            </summary>
+            <param name="q">Search query or domain interest.</param>
+            <param name="category">Industry sector (e.g. "SaaS / Enterprise Software").</param>
+            <param name="hub">Preferred corridor.</param>
+            <param name="limit">Maximum recommendations (default: 6).</param>
+            <response code="200">Ranked company recommendations.</response>
+        </member>
         <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.SearchController">
             <summary>
             Intelligent Multi-Entity Search API.
@@ -204,6 +232,12 @@
         <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.SubmissionsController.GetSubmissionStatus(System.String)">
             <summary>
             Check moderation status of a submission.
+            </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Services.AI.DeterministicEmbeddingProvider">
+            <summary>
+            High-performance deterministic semantic embedding provider for development, testing, and offline modes.
+            Maps technical taxonomies, corridor keywords, and role concepts into normalized 64-dimensional semantic space.
             </summary>
         </member>
         <member name="T:Program">

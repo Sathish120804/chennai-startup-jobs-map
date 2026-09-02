@@ -184,5 +184,42 @@ namespace ChennaiStartupJobsMap.Tests
             Assert.Equal(initialJobsCount, finalJobsCount); // Idempotency check: no duplicates created!
             Assert.True(run2.DuplicatesFound > 0);
         }
+
+        [Fact]
+        public void EmbeddingProvider_ComputesHigherSimilarityForRelatedConcepts()
+        {
+            var provider = new ChennaiStartupJobsMap.Api.Services.AI.DeterministicEmbeddingProvider();
+
+            var vBackend = provider.GenerateEmbedding("backend developer .NET C# api");
+            var vDotNet = provider.GenerateEmbedding("ASP.NET Core Software Engineer");
+            var vFrontend = provider.GenerateEmbedding("React UI UX Designer Frontend");
+
+            var simRelated = provider.CosineSimilarity(vBackend, vDotNet);
+            var simUnrelated = provider.CosineSimilarity(vBackend, vFrontend);
+
+            Assert.True(simRelated > simUnrelated, $"Expected related similarity ({simRelated}) > unrelated ({simUnrelated})");
+        }
+
+        [Fact]
+        public async Task RecommendationService_ReturnsRankedMatchesWithExplanations()
+        {
+            using var db = GetInMemoryDbContext();
+            var embedding = new ChennaiStartupJobsMap.Api.Services.AI.DeterministicEmbeddingProvider();
+            var companyService = new CompanyService(db);
+            var jobService = new JobService(db);
+            var recService = new ChennaiStartupJobsMap.Api.Services.AI.JobRecommendationService(db, embedding, jobService, companyService);
+
+            var recs = await recService.GetJobRecommendationsAsync(
+                query: "React frontend fresher",
+                technologies: new System.Collections.Generic.List<string> { "React" },
+                isFresher: true,
+                limit: 5);
+
+            Assert.NotEmpty(recs);
+            var topMatch = recs.First();
+            Assert.True(topMatch.MatchScore >= 70);
+            Assert.NotEmpty(topMatch.MatchReasons);
+            Assert.Contains(topMatch.MatchReasons, r => r.Contains("React") || r.Contains("Fresher") || r.Contains("Entry-level"));
+        }
     }
 }
