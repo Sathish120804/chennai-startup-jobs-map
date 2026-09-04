@@ -41,6 +41,12 @@ namespace ChennaiStartupJobsMap.Api.Data
                 entity.HasIndex(c => c.Hub);
                 entity.HasIndex(c => c.HiringStatus);
 
+                entity.HasIndex(c => c.City);
+                entity.HasIndex(c => c.VerificationStatus);
+                entity.HasIndex(c => c.IsActive);
+                entity.HasIndex(c => c.Website);
+                entity.HasIndex(c => c.Industry);
+
                 entity.Property(c => c.CompanyTypes)
                     .HasConversion(
                         v => string.Join(',', v),
@@ -60,6 +66,12 @@ namespace ChennaiStartupJobsMap.Api.Data
                     );
 
                 entity.Property(c => c.TechStack)
+                    .HasConversion(
+                        v => string.Join(',', v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                    );
+
+                entity.Property(c => c.ChennaiLocations)
                     .HasConversion(
                         v => string.Join(',', v),
                         v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()

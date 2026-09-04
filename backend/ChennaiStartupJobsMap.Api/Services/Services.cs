@@ -21,7 +21,12 @@ namespace ChennaiStartupJobsMap.Api.Services
             List<string>? technologies = null,
             string sortBy = "featured",
             int page = 1,
-            int pageSize = 20
+            int pageSize = 20,
+            bool? isMnc = null,
+            bool? isGcc = null,
+            bool? isStartup = null,
+            bool? isProductCompany = null,
+            string? industry = null
         );
 
         Task<CompanyDto?> GetCompanyByIdAsync(string id);
@@ -47,7 +52,12 @@ namespace ChennaiStartupJobsMap.Api.Services
             List<string>? technologies = null,
             string sortBy = "featured",
             int page = 1,
-            int pageSize = 20)
+            int pageSize = 20,
+            bool? isMnc = null,
+            bool? isGcc = null,
+            bool? isStartup = null,
+            bool? isProductCompany = null,
+            string? industry = null)
         {
             var query = _db.Companies.AsNoTracking().Where(c => c.IsActive);
 
@@ -92,8 +102,15 @@ namespace ChennaiStartupJobsMap.Api.Services
                     continue;
                 }
 
+                // Classification filters
+                if (isMnc == true && !c.IsMNC) continue;
+                if (isGcc == true && !c.IsGCC) continue;
+                if (isStartup == true && !c.IsStartup) continue;
+                if (isProductCompany == true && !c.IsProductCompany) continue;
+                if (!string.IsNullOrWhiteSpace(industry) && !c.Industry.Equals(industry, StringComparison.OrdinalIgnoreCase)) continue;
+
                 // Hiring filter
-                if (isHiringOnly == true && activeJobsCount == 0)
+                if (isHiringOnly == true && activeJobsCount == 0 && !c.IsHiring)
                 {
                     continue;
                 }
@@ -119,11 +136,15 @@ namespace ChennaiStartupJobsMap.Api.Services
                 "name" => companyDtos.OrderBy(c => c.Name).ToList(),
                 "foundedYear" => companyDtos.OrderByDescending(c => c.FoundedYear).ToList(),
                 "jobsCount" => companyDtos.OrderByDescending(c => c.Stats.ActiveJobsCount).ToList(),
+                "recent" => companyDtos.OrderByDescending(c => c.LastVerifiedAt).ToList(),
                 _ => companyDtos.OrderByDescending(c => c.IsFeatured).ThenByDescending(c => c.Stats.ActiveJobsCount).ToList(),
             };
 
             var total = companyDtos.Count;
-            var items = companyDtos.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var items = companyDtos
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return new PagedResultDto<CompanyDto>
             {
@@ -159,25 +180,52 @@ namespace ChennaiStartupJobsMap.Api.Services
                 Slug = c.Slug,
                 Tagline = c.Tagline,
                 Description = c.Description,
+                ShortDescription = c.ShortDescription,
                 Logo = c.Logo,
+                LogoUrl = c.LogoUrl,
                 Website = c.Website,
+                OfficialWebsite = c.OfficialWebsite,
                 CareersUrl = c.CareersUrl,
+                OfficialCareersUrl = c.OfficialCareersUrl,
                 CompanyTypes = c.CompanyTypes,
                 Categories = c.Categories,
+                Category = c.Category,
+                SubCategory = c.SubCategory,
+                Industry = c.Industry,
+                CompanyType = c.CompanyType,
                 Hub = c.Hub,
                 Address = c.Address,
+                City = c.City,
+                State = c.State,
+                Country = c.Country,
+                Headquarters = c.Headquarters,
+                ChennaiPresence = c.ChennaiPresence,
+                ChennaiLocations = c.ChennaiLocations,
                 Coordinates = new CoordinatesDto { Lat = c.Latitude, Lng = c.Longitude },
                 MapPrecision = c.MapPrecision,
                 FoundedYear = c.FoundedYear,
                 EmployeeCount = c.EmployeeCount,
+                EmployeeRange = c.EmployeeRange,
                 FundingStage = c.FundingStage,
                 TotalFundingRaised = c.TotalFundingRaised,
                 HiringStatus = c.HiringStatus,
+                IsHiring = c.IsHiring || activeJobs > 0,
+                IsStartup = c.IsStartup,
+                IsMNC = c.IsMNC,
+                IsGCC = c.IsGCC,
+                IsProductCompany = c.IsProductCompany,
+                IsITServices = c.IsITServices,
                 Tags = c.Tags,
+                TechnologyTags = c.TechnologyTags,
                 TechStack = c.TechStack,
+                Skills = c.Skills,
                 VerificationStatus = c.VerificationStatus,
+                VerificationMethod = c.VerificationMethod,
+                ConfidenceScore = c.ConfidenceScore,
+                ChennaiRelevanceScore = c.ChennaiRelevanceScore,
                 IsFeatured = c.IsFeatured,
                 IsSeedData = c.IsSeedData,
+                SourceType = c.SourceType,
                 SourceName = c.SourceName,
                 SourceUrl = c.SourceUrl,
                 DiscoveredAt = c.DiscoveredAt,

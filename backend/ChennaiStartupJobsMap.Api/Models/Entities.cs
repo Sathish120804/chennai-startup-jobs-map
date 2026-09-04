@@ -14,7 +14,7 @@ namespace ChennaiStartupJobsMap.Api.Models
         public string Logo { get; set; } = string.Empty;
         public string Website { get; set; } = string.Empty;
         public string CareersUrl { get; set; } = string.Empty;
-        public List<string> CompanyTypes { get; set; } = new(); // MNC, GCC, STARTUP, PRODUCT COMPANY, IT SERVICES, SAAS, etc.
+        public List<string> CompanyTypes { get; set; } = new(); // MNC, GCC, STARTUP, SCALEUP, PRODUCT, IT_SERVICES, SAAS, etc.
         public List<string> Categories { get; set; } = new();
         public string Hub { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
@@ -28,16 +28,46 @@ namespace ChennaiStartupJobsMap.Api.Models
         public string HiringStatus { get; set; } = "Active"; // Active, Hiring Surge, Selective, Not Hiring
         public List<string> Tags { get; set; } = new();
         public List<string> TechStack { get; set; } = new();
-        public string VerificationStatus { get; set; } = "VERIFIED"; // VERIFIED, UNVERIFIED, PENDING_REVIEW, STALE, REJECTED
+        public string VerificationStatus { get; set; } = "VERIFIED"; // VERIFIED, SOURCE_BACKED, USER_SUBMITTED, ADMIN_VERIFIED, UNVERIFIED, STALE, REJECTED
         public bool IsFeatured { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsSeedData { get; set; } = true;
+        public string SourceType { get; set; } = "OFFICIAL_WEBSITE";
         public string SourceName { get; set; } = "Official Careers / Company Website";
         public string? SourceUrl { get; set; }
+        public string? SourceRecordId { get; set; }
+        public string VerificationMethod { get; set; } = "OFFICIAL_DOMAIN_AUDIT";
+        public int ConfidenceScore { get; set; } = 95;
+        public int ChennaiRelevanceScore { get; set; } = 100;
+        public string Industry { get; set; } = "Technology";
+        public string? SubCategory { get; set; }
+        public string Headquarters { get; set; } = "Chennai, Tamil Nadu";
+        public string ChennaiPresence { get; set; } = "Headquarters / Technology Center";
+        public List<string> ChennaiLocations { get; set; } = new();
+        public string City { get; set; } = "Chennai";
+        public string State { get; set; } = "Tamil Nadu";
+        public string Country { get; set; } = "India";
         public DateTime DiscoveredAt { get; set; } = DateTime.UtcNow;
         public DateTime LastVerifiedAt { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Aliases & convenience accessors for Milestone 11
+        public string ShortDescription { get => !string.IsNullOrEmpty(Tagline) ? Tagline : (Description.Length > 150 ? Description.Substring(0, 147) + "..." : Description); set => Tagline = value; }
+        public string LogoUrl { get => Logo; set => Logo = value; }
+        public string OfficialWebsite { get => Website; set => Website = value; }
+        public string OfficialCareersUrl { get => CareersUrl; set => CareersUrl = value; }
+        public string Category { get => Categories.Count > 0 ? Categories[0] : "SaaS / Enterprise Software"; set { if (!Categories.Contains(value) && !string.IsNullOrWhiteSpace(value)) Categories.Insert(0, value); } }
+        public string CompanyType { get => CompanyTypes.Count > 0 ? CompanyTypes[0] : "STARTUP"; set { if (!CompanyTypes.Contains(value) && !string.IsNullOrWhiteSpace(value)) CompanyTypes.Insert(0, value); } }
+        public string EmployeeRange { get => EmployeeCount; set => EmployeeCount = value; }
+        public bool IsStartup => CompanyTypes.Any(t => t.Equals("STARTUP", StringComparison.OrdinalIgnoreCase));
+        public bool IsMNC => CompanyTypes.Any(t => t.Equals("MNC", StringComparison.OrdinalIgnoreCase) || t.Equals("ENTERPRISE", StringComparison.OrdinalIgnoreCase));
+        public bool IsGCC => CompanyTypes.Any(t => t.Equals("GCC", StringComparison.OrdinalIgnoreCase) || t.Equals("GLOBAL CAPABILITY CENTER", StringComparison.OrdinalIgnoreCase));
+        public bool IsProductCompany => CompanyTypes.Any(t => t.Equals("PRODUCT COMPANY", StringComparison.OrdinalIgnoreCase) || t.Equals("PRODUCT", StringComparison.OrdinalIgnoreCase) || t.Equals("SAAS", StringComparison.OrdinalIgnoreCase));
+        public bool IsITServices => CompanyTypes.Any(t => t.Equals("IT SERVICES", StringComparison.OrdinalIgnoreCase) || t.Equals("CONSULTING", StringComparison.OrdinalIgnoreCase));
+        public bool IsHiring => HiringStatus.Equals("Active", StringComparison.OrdinalIgnoreCase) || HiringStatus.Equals("Hiring Surge", StringComparison.OrdinalIgnoreCase);
+        public List<string> TechnologyTags { get => Tags; set => Tags = value; }
+        public List<string> Skills { get => TechStack; set => TechStack = value; }
 
         public List<Job> Jobs { get; set; } = new();
         public List<CompanySource> Sources { get; set; } = new();
@@ -101,6 +131,7 @@ namespace ChennaiStartupJobsMap.Api.Models
         public string SourceType { get; set; } = "OFFICIAL_WEBSITE"; // OFFICIAL_WEBSITE, OFFICIAL_CAREERS, PUBLIC_DIRECTORY, MANUAL_ADMIN_IMPORT, USER_SUBMISSION
         public string SourceName { get; set; } = string.Empty;
         public string SourceUrl { get; set; } = string.Empty;
+        public string? SourceRecordId { get; set; }
         public int Confidence { get; set; } = 90;
         public string Status { get; set; } = "VERIFIED";
         public DateTime DiscoveredAt { get; set; } = DateTime.UtcNow;
