@@ -46,6 +46,9 @@ namespace ChennaiStartupJobsMap.Api.Data
                 entity.HasIndex(c => c.IsActive);
                 entity.HasIndex(c => c.Website);
                 entity.HasIndex(c => c.Industry);
+                entity.HasIndex(c => new { c.Hub, c.VerificationStatus });
+                entity.HasIndex(c => new { c.IsActive, c.HiringStatus });
+                entity.HasIndex(c => new { c.IsActive, c.FoundedYear });
 
                 entity.Property(c => c.CompanyTypes)
                     .HasConversion(
@@ -89,6 +92,8 @@ namespace ChennaiStartupJobsMap.Api.Data
                 entity.HasIndex(j => j.IsFresher);
                 entity.HasIndex(j => j.IsEngineering);
                 entity.HasIndex(j => j.FreshnessStatus);
+                entity.HasIndex(j => new { j.CompanyId, j.IsActive });
+                entity.HasIndex(j => new { j.IsActive, j.IsFresher });
 
                 entity.HasOne(j => j.Company)
                     .WithMany(c => c.Jobs)

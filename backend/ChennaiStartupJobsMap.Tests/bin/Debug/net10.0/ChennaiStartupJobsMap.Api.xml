@@ -75,6 +75,22 @@
             Seed and update verified Chennai tech companies directory.
             </summary>
         </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.ImportCompaniesCsv(System.Boolean,System.String,ChennaiStartupJobsMap.Api.Services.ICompanyImportService)">
+            <summary>
+            Import companies from CSV format with optional dry-run preview.
+            Accepts uploaded file or raw body text.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.ImportCompaniesJson(System.Boolean,System.String,ChennaiStartupJobsMap.Api.Services.ICompanyImportService)">
+            <summary>
+            Import companies from JSON format with optional dry-run preview.
+            </summary>
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Controllers.v1.AdminController.GetDataQualityDashboard(ChennaiStartupJobsMap.Api.Services.ICompanyImportService)">
+            <summary>
+            System-wide data quality and audit metrics dashboard.
+            </summary>
+        </member>
         <member name="T:ChennaiStartupJobsMap.Api.Controllers.v1.AnalyticsController">
             <summary>
             Platform Analytics and Observability.
@@ -393,6 +409,18 @@
             <summary>
             Delete an active job alert.
             </summary>
+        </member>
+        <member name="T:ChennaiStartupJobsMap.Api.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:ChennaiStartupJobsMap.Api.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
         </member>
         <member name="T:ChennaiStartupJobsMap.Api.Services.AI.DeterministicEmbeddingProvider">
             <summary>

@@ -2,12 +2,12 @@
 
 > An independent Chennai-focused company, startup, tech ecosystem, and career discovery platform.
 
-[![Status](https://img.shields.io/badge/status-Milestones--8--9--10--Complete-emerald)](#current-status)
+[![Status](https://img.shields.io/badge/status-Milestone--11--Complete-emerald)](#current-status)
 [![Frontend](https://img.shields.io/badge/frontend-React%2018%20%7C%20TypeScript%20%7C%20Vite%20%7C%20Tailwind-blue)](#technology-stack)
 [![Backend](https://img.shields.io/badge/backend-ASP.NET%20Core%20Web%20API%20%7C%20.NET%2010-purple)](#technology-stack)
 [![Swagger](https://img.shields.io/badge/OpenAPI%20v3-Interactive%20Swagger%20UI-brightgreen)](http://localhost:5241/swagger)
-[![Hangfire](https://img.shields.io/badge/jobs-Hangfire%20Scheduler-red)](http://localhost:5241/hangfire)
-[![Database](https://img.shields.io/badge/database-EF%20Core%20%7C%20PostgreSQL-blue)](#technology-stack)
+[![Database](https://img.shields.io/badge/database-PostgreSQL%20%7C%20EF%20Core%20Migrations-blue)](#technology-stack)
+[![Map](https://img.shields.io/badge/map-OpenStreetMap%20%2B%20Leaflet%20Clustering-brightgreen)](#map-scalability)
 
 ---
 
@@ -17,36 +17,56 @@
 
 ---
 
-## Architecture & Systems (Milestones 8 + 9 + 10)
+## Architecture & Systems (Milestone 11)
 
 ```text
        ┌────────────────────────────────────────────────────────┐
        │             React + TypeScript Frontend                │
-       │  (Companies Directory, Map Clustering, Job Boards,     │
-       │   User Saved Jobs/Alerts, Recruiter Job Posting)       │
+       │  (OSM Keyless Map, Marker Clustering, Bulk Importer,   │
+       │   Quality Dashboard, Directory, Recruiter Portal)      │
        └──────────────────────────┬─────────────────────────────┘
                                   │
                                   ▼
        ┌────────────────────────────────────────────────────────┐
        │      ASP.NET Core Web API (.NET 10) — /api/v1/         │
-       │   (Swagger UI with JWT Bearer, Global Error Handling)  │
-       └───────┬───────────────────┬────────────────────┬───────┘
-               │                   │                    │
-               ▼                   ▼                    ▼
-       ┌───────────────┐   ┌───────────────┐   ┌────────────────┐
-       │ User Platform │   │ Recruiter     │   │ Platform       │
-       │ & Bookmarks   │   │ Portal &      │   │ Analytics      │
-       │ (/users/me)   │   │ Claims (/rec) │   │ (/analytics)   │
-       └───────┬───────┘   └───────┬───────┘   └────────┬───────┘
-               │                   │                    │
-               └───────────────────┼────────────────────┘
-                                   ▼
+       │   (Bulk Ingestion, Data Quality, N+1 Query Optimizer)   │
+       └──────────────────────────┬─────────────────────────────┘
+                                  │
+                                  ▼
        ┌────────────────────────────────────────────────────────┐
-       │              Entity Framework Core Relational          │
-       │     (Companies, Jobs, CompanySources, CareerSources,   │
-       │      SavedJobs, SavedCompanies, Alerts, Claims)        │
+       │         PostgreSQL Database via EF Core Migrations     │
+       │   (Companies, Jobs, Sources, Composite Performance     │
+       │    Indexes on Hubs, Verification, Freshness & Roles)   │
        └────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Milestone 11 Key Highlights
+
+### 1. Production Data Foundation & PostgreSQL Migration
+- Configured resilient EF Core DbContext supporting PostgreSQL (`Npgsql.EntityFrameworkCore.PostgreSQL` 10.0.3) with In-Memory fallback for development and testing.
+- Created EF Core initial migration `20260912060222_InitialCreate` with composite performance indexes:
+  - `(Hub, VerificationStatus)`
+  - `(IsActive, HiringStatus)`
+  - `(IsActive, FoundedYear)`
+  - `(CompanyId, IsActive)`
+  - `(IsActive, IsFresher)`
+
+### 2. $N+1$ Query Elimination
+- Replaced per-company individual job count queries in `CompanyService.GetCompaniesAsync` with a single correlated database `GroupBy(j => j.CompanyId)` aggregate query, slashing database round trips from $O(N)$ to $O(1)$.
+
+### 3. Keyless Map Scalability & Marker Clustering
+- Migrated map tile layers to standard, keyless OpenStreetMap (OSM) tiles (`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`) with proper attribution — requiring zero commercial API keys.
+- Integrated `leaflet.markercluster` with chunked rendering (`chunkedLoading: true`, `maxClusterRadius: 50`) and custom styled cluster pins to smoothly support 100 to 1,000+ companies.
+
+### 4. Admin Bulk Import Pipeline & Data Quality Dashboard
+- **Admin CSV / JSON Bulk Ingestion**: `POST /api/v1/admin/import/companies/csv` and `POST /api/v1/admin/import/companies/json` with `dryRun=true` preview support, RFC 4180 parsing, 10MB upload limits, and domain/slug deduplication.
+- **Data Quality Dashboard**: `GET /api/v1/admin/quality/dashboard` tracking verified count against the 700+ target goal, missing careers/coordinates, and sector distributions.
+- **Frontend Admin Integration**: Two new dedicated subtabs for **Company Bulk Import** (file drag & drop, raw paste, preview report) and **Data Quality Dashboard** (target goal meter, health cards, sector breakdown).
+
+### 5. Verified Real Chennai Tech Directory
+- Seed dataset expanded to **105+ verified real companies** across all 15 key sectors (MNCs, GCCs, SaaS, FinTech, DeepTech, AutoTech, HealthTech, EdTech, Semiconductor, etc.) adhering to a strict anti-hallucination policy with authentic Chennai tech park presences.
 
 ---
 
@@ -108,7 +128,7 @@
 
 ## Automated Test Suites
 
-### Backend xUnit Unit Tests (15/15 Passed)
+### Backend xUnit Unit Tests (19/19 Passed)
 ```bash
 dotnet test backend/ChennaiStartupJobsMap.Tests/ChennaiStartupJobsMap.Tests.csproj
 ```

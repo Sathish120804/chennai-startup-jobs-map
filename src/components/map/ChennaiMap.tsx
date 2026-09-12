@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useAppStore } from '../../store/useAppStore';
 import { db } from '../../services/db';
 import { APP_CONFIG, CHENNAI_TECH_HUBS } from '../../config/constants';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
 import { 
   Briefcase, 
-  Navigation, 
-  CheckCircle2, 
-  GraduationCap
+  Navigation
 } from 'lucide-react';
-import { Company } from '../../types';
+import { CompanyMarkerCluster } from './CompanyMarkerCluster';
 
 // Component to handle dynamic fly-to and map center changes
 const MapController: React.FC<{ targetCoords: [number, number] | null; zoom?: number }> = ({ targetCoords, zoom }) => {
@@ -50,31 +45,6 @@ export const ChennaiMap: React.FC = () => {
   const filteredCompanies = useMemo(() => {
     return db.getFilteredCompanies(filters);
   }, [filters, dbVersion]);
-
-  // Create custom marker icons dynamically
-  const createCompanyIcon = (company: Company, isSelected: boolean, isHovered: boolean) => {
-    const stats = db.getCompanyStats(company.id);
-    const hasJobs = stats.activeJobsCount > 0;
-
-    let bgColor = hasJobs ? '#0284c7' : '#475569';
-    let ringColor = isSelected ? '#f59e0b' : isHovered ? '#38bdf8' : hasJobs ? '#10b981' : '#cbd5e1';
-    let pulseHtml = hasJobs ? '<span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span>' : '';
-
-    return L.divIcon({
-      className: 'custom-company-pin',
-      html: `
-        <div class="relative group cursor-pointer transition-transform duration-200 ${isSelected || isHovered ? 'scale-125 z-50' : 'hover:scale-110'}">
-          <div style="background-color: ${bgColor}; border: 2.5px solid ${ringColor};" class="w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-white font-bold text-xs">
-            ${stats.activeJobsCount > 0 ? stats.activeJobsCount : '🏢'}
-          </div>
-          ${pulseHtml}
-        </div>
-      `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-      popupAnchor: [0, -18],
-    });
-  };
 
   const handleCorridorClick = (hubCoords: { lat: number; lng: number }) => {
     setTargetCoords([hubCoords.lat, hubCoords.lng]);
@@ -133,79 +103,21 @@ export const ChennaiMap: React.FC = () => {
         className="w-full h-full"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
         />
 
         <MapController targetCoords={targetCoords} zoom={targetZoom} />
 
-        {filteredCompanies.map((company) => {
-          const stats = db.getCompanyStats(company.id);
-          const isSelected = selectedCompanyId === company.id;
-          const isHovered = hoveredCompanyId === company.id;
-
-          return (
-            <Marker
-              key={company.id}
-              position={[company.coordinates.lat, company.coordinates.lng]}
-              icon={createCompanyIcon(company, isSelected, isHovered)}
-              eventHandlers={{
-                mouseover: () => setHoveredCompanyId(company.id),
-                mouseout: () => setHoveredCompanyId(null),
-              }}
-            >
-              <Popup className="custom-popup" closeButton={false}>
-                <div className="p-2 max-w-[260px] space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={company.logo}
-                        alt={company.name}
-                        className="w-8 h-8 rounded-lg object-cover border border-slate-200"
-                      />
-                      <div>
-                        <div className="flex items-center gap-1 font-bold text-slate-900 text-xs leading-tight">
-                          <span>{company.name}</span>
-                          {company.verificationStatus === 'VERIFIED' && (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-brand-600 shrink-0" />
-                          )}
-                        </div>
-                        <div className="text-[10px] text-slate-500">{company.hub}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
-                    {company.tagline}
-                  </p>
-
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <Badge variant={stats.activeJobsCount > 0 ? 'success' : 'neutral'} size="sm">
-                      {stats.activeJobsCount > 0 ? `${stats.activeJobsCount} Active Jobs` : 'Not Hiring'}
-                    </Badge>
-                    {stats.fresherJobsCount > 0 && (
-                      <Badge variant="brand" size="sm">
-                        <GraduationCap className="w-3 h-3 mr-1" />
-                        {stats.fresherJobsCount} Fresher
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="pt-1 flex items-center gap-1.5">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      className="w-full text-xs py-1.5"
-                      onClick={() => setSelectedCompanyId(company.id)}
-                    >
-                      Inspect Company & Vacancies
-                    </Button>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        {/* Marker Clustering Layer for 700+ Companies */}
+        <CompanyMarkerCluster
+          companies={filteredCompanies}
+          selectedCompanyId={selectedCompanyId}
+          hoveredCompanyId={hoveredCompanyId}
+          onSelectCompany={setSelectedCompanyId}
+          onHoverCompany={setHoveredCompanyId}
+        />
       </MapContainer>
 
       {/* Bottom Floating Stats Bar */}

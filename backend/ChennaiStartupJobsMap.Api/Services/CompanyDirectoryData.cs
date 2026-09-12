@@ -618,6 +618,432 @@ namespace ChennaiStartupJobsMap.Api.Services
                 new() { "Java", "Python", "React", "Solr", "AWS", "MySQL" },
                 new() { "Local Services", "Consumer Tech", "Marketplace" });
 
+            // ==========================================
+            // 9. IT SERVICES, CONSULTING & TRANSFORMATION
+            // ==========================================
+            AddCompany("comp-61", "Cognizant Technology Solutions", "cognizant", "Global IT Services & Digital Engineering Pioneer",
+                "Cognizant is an American multinational IT services giant with its largest global operational hub, delivery centers, and campuses in Chennai.",
+                "https://www.cognizant.com", "https://careers.cognizant.com/global/en",
+                new() { "MNC", "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "DeepTech & AI" },
+                "OMR (IT Corridor)", "5/535 Old Mahabalipuram Road, Thoraipakkam & MEPZ SEZ, Chennai 600097",
+                12.9412, 80.2378, 1994, "50,000+", "Hiring Surge",
+                new() { "Java", "Python", "React", "Cloud", "Snowflake", "Azure", "AWS", "AI/ML" },
+                new() { "IT Services", "Digital Engineering", "Fortune 500", "Cloud" });
+
+            AddCompany("comp-62", "Tata Consultancy Services (TCS)", "tcs-chennai", "India's Flagship Global Tech Consulting Titan",
+                "TCS Siruseri is the company's iconic butterfly campus housing over 25,000 engineers developing banking, aerospace, and AI platforms.",
+                "https://www.tcs.com", "https://www.tcs.com/careers",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "DeepTech & AI" },
+                "Siruseri (SIPCOT IT Park)", "SIPCOT IT Park, Siruseri, Old Mahabalipuram Road, Chennai 603103",
+                12.8315, 80.2225, 1968, "50,000+", "Hiring Surge",
+                new() { "Java", "Spring Boot", "Python", "Angular", "React", "AWS", "SAP", "Kubernetes" },
+                new() { "IT Services", "Consulting", "Enterprise IT", "Siruseri" });
+
+            AddCompany("comp-63", "Infosys Chennai", "infosys-chennai", "Next-Generation Digital Services & Consulting",
+                "Infosys operates major development campuses in Sholinganallur and Mahindra World City, delivering enterprise digital core transformations.",
+                "https://www.infosys.com", "https://www.infosys.com/careers.html",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "DeepTech & AI" },
+                "OMR (IT Corridor)", "138 Old Mahabalipuram Road, Sholinganallur, Chennai 600119",
+                12.9038, 80.2289, 1981, "25,000+", "Active",
+                new() { "Java", ".NET", "Python", "Cloud", "React", "Oracle", "DevOps" },
+                new() { "Digital Transformation", "IT Services", "Cloud" });
+
+            AddCompany("comp-64", "Wipro Technologies Chennai", "wipro-chennai", "Cognitive Computing & Enterprise Cloud Solutions",
+                "Wipro's Sholinganallur Center of Excellence drives enterprise cybersecurity, artificial intelligence, and cloud migrations.",
+                "https://www.wipro.com", "https://careers.wipro.com/",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation" },
+                "OMR (IT Corridor)", "ELCOT SEZ, Sholinganallur, Rajiv Gandhi Salai, Chennai 600119",
+                12.9002, 80.2278, 1945, "20,000+", "Active",
+                new() { "Java", "Python", "Azure", "React", "Salesforce", "Kubernetes" },
+                new() { "IT Services", "Cloud Migration", "Enterprise" });
+
+            AddCompany("comp-65", "HCLTech Chennai", "hcltech-chennai", "Supercharging Progress with Engineering R&D & Digital Tech",
+                "HCLTech operates extensive innovation centers in Navalur, Sholinganallur, and Ambattur engineering hardware, chips, and enterprise software.",
+                "https://www.hcltech.com", "https://www.hcltech.com/careers",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "DeepTech & AI" },
+                "OMR (IT Corridor)", "ETA Techno Park, Navalur, Rajiv Gandhi Salai, Chennai 603103",
+                12.8488, 80.2255, 1976, "25,000+", "Hiring Surge",
+                new() { "C++", "Java", "Embedded Systems", "AWS", "Python", "IoT", "Cybersecurity" },
+                new() { "Engineering Services", "R&D", "Cloud", "IT Services" });
+
+            AddCompany("comp-66", "LTIMindtree Chennai", "ltimindtree", "Engineering at the Intersection of Physical & Digital Worlds",
+                "LTIMindtree's Chennai development center at L&T Technology Park Manapakkam builds digital platforms, supply chain intelligence, and SaaS.",
+                "https://www.ltimindtree.com", "https://www.ltimindtree.com/careers/",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation" },
+                "Porur & DLF Cybercity", "L&T Technology Center, TC-1 Building, Mount Poonamallee Road, Manapakkam, Chennai 600089",
+                13.0298, 80.1638, 1996, "15,000+", "Active",
+                new() { "Java", "Microservices", "React", "Azure", "Snowflake", "Databricks" },
+                new() { "Digital Consulting", "Data Engineering", "Enterprise" });
+
+            AddCompany("comp-67", "Hexaware Technologies", "hexaware", "Automate Everything, Cloudify Everything, Transform Customer Experiences",
+                "Hexaware's state-of-the-art campus in Siruseri SIPCOT IT Park powers automated enterprise cloud migration, GenAI, and QA automation.",
+                "https://hexaware.com", "https://hexaware.com/careers/",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "DeepTech & AI" },
+                "Siruseri (SIPCOT IT Park)", "H5, SIPCOT IT Park, Siruseri, Navalur Post, Chennai 603103",
+                12.8335, 80.2238, 1990, "10,000+", "Active",
+                new() { "Java", "Python", "Generative AI", "React", "AWS", "Azure", "Selenium" },
+                new() { "Cloud Migration", "AI Automation", "IT Services" });
+
+            AddCompany("comp-68", "Prodapt Solutions", "prodapt", "Connected Ecosystem Accelerator for DSPs and Digital Brands",
+                "Prodapt is a global consulting and technology provider focused exclusively on telecommunications, digital media, and hyper-scale tech.",
+                "https://prodapt.com", "https://prodapt.com/careers",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "SaaS / Enterprise Software" },
+                "OMR (IT Corridor)", "Prince Info City II, 283/4 Rajiv Gandhi Salai, Kandanchavadi, Chennai 600096",
+                12.9645, 80.2465, 1999, "5,000+", "Active",
+                new() { "Java", "Python", "5G OpenRAN", "React", "Cloud Orchestration", "AWS" },
+                new() { "Telecom Software", "5G", "Cloud", "DSP" });
+
+            AddCompany("comp-69", "Aspire Systems", "aspire-systems", "Product Engineering & Software Craftsmanship Partner",
+                "Aspire Systems specializes in enterprise product engineering, digital experience solutions, and autonomous testing for global ISVs.",
+                "https://www.aspiresys.com", "https://www.aspiresys.com/careers/",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation" },
+                "Siruseri (SIPCOT IT Park)", "1/D-1, SIPCOT IT Park, Siruseri, Chennai 603103",
+                12.8275, 80.2185, 1996, "4,000+", "Active",
+                new() { "Java", ".NET", "React", "Angular", "Python", "AWS", "Flutter" },
+                new() { "Product Engineering", "Software Craftsmanship", "Fintech" });
+
+            AddCompany("comp-70", "Virtusa Corporation", "virtusa", "Digital Business Transformation and Core Banking Modernization",
+                "Virtusa's Chennai engineering centers build digital engineering solutions for Fortune 500 banks, insurance firms, and healthcare organizations.",
+                "https://www.virtusa.com", "https://www.virtusa.com/careers",
+                new() { "MNC", "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation", "FinTech" },
+                "OMR (IT Corridor)", "34 IT Highway, Navalur, Rajiv Gandhi Salai, Chennai 603103",
+                12.8465, 80.2262, 1996, "8,000+", "Active",
+                new() { "Java", "Spring Boot", "React", "Microservices", "GCP", "Kubernetes" },
+                new() { "Banking Modernization", "Digital Engineering", "FinTech" });
+
+            AddCompany("comp-71", "Movate (formerly CSS Corp)", "movate", "Digital Technology & Customer Experience Transformation",
+                "Movate creates human-centric tech services leveraging generative AI, automated IT infrastructure services, and customer experience ops.",
+                "https://www.movate.com", "https://www.movate.com/careers/",
+                new() { "ENTERPRISE", "IT SERVICES" }, new() { "IT Services & Digital Transformation" },
+                "Ambattur Industrial Estate", "Ambit IT Park, Ambattur Industrial Estate, Chennai 600058",
+                13.0885, 80.1612, 1996, "5,000+", "Active",
+                new() { "Python", "Node.js", "React", "AI/ML", "Cloud Support", "AWS" },
+                new() { "Customer Experience", "Cloud Services", "IT Infrastructure" });
+
+            AddCompany("comp-72", "Sify Technologies", "sify-technologies", "Enterprise Cloud, Submarine Cables & Data Center Infrastructure",
+                "Sify is India's pioneer telecom and cloud connectivity provider, operating hyper-scale data centers, subsea fiber cables, and network security.",
+                "https://www.sifytechnologies.com", "https://www.sifytechnologies.com/careers/",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "Cybersecurity", "IT Services & Digital Transformation" },
+                "Taramani (Tidel Park & Ascendas)", "Tidel Park, 2nd Floor, Rajiv Gandhi Salai, Taramani, Chennai 600113",
+                12.9895, 80.2498, 1995, "4,000+", "Active",
+                new() { "Linux", "SD-WAN", "Python", "Kubernetes", "OpenStack", "Network Security" },
+                new() { "Data Centers", "Cloud", "Submarine Fiber", "Cybersecurity" });
+
+            AddCompany("comp-73", "Redington Limited", "redington", "Global Technology Supply Chain & Digital Distribution Giant",
+                "Redington is a Fortune India 500 company orchestrating end-to-end supply chain tech, cloud distribution, and 3D printing across 38 emerging markets.",
+                "https://redingtongroup.com", "https://redingtongroup.com/careers/",
+                new() { "ENTERPRISE" }, new() { "Supply Chain & Logistics Tech", "E-Commerce & Retail Tech" },
+                "Guindy (SIDCO / Olympia)", "SPL Guindy House, 95 Mount Road, Guindy, Chennai 600032",
+                13.0105, 80.2142, 1993, "5,000+", "Active",
+                new() { "SAP", "Java", "Python", "Cloud Commerce", "Azure", "Logistics Tech" },
+                new() { "Supply Chain", "Tech Distribution", "Cloud Marketplace" });
+
+            // ==========================================
+            // 10. FINTECH, BANKING & DEBT PLATFORMS
+            // ==========================================
+            AddCompany("comp-74", "M2P Fintech", "m2p-fintech", "API Infrastructure Unicorn for Banks and Neo-Fintechs",
+                "M2P Fintech is Asia's largest API infrastructure provider enabling banks and fintechs to launch credit cards, core banking, and UPI.",
+                "https://m2pfintech.com", "https://m2pfintech.com/careers/",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "FinTech", "DeepTech & AI" },
+                "Guindy (SIDCO / Olympia)", "Guindy Industrial Estate, Guindy, Chennai 600032",
+                13.0115, 80.2078, 2014, "1,000+", "Hiring Surge",
+                new() { "Go", "Java", "React", "Kafka", "PostgreSQL", "AWS", "Fintech APIs" },
+                new() { "API Banking", "Cards", "Payments Infrastructure", "Unicorn" });
+
+            AddCompany("comp-75", "Yubi (CredAvenue)", "yubi-credavenue", "Enterprise Debt Marketplace & Credit Infrastructure Platform",
+                "Yubi is a fintech unicorn revolutionizing enterprise debt markets, co-lending, and bond issuance via high-throughput matching algorithms.",
+                "https://go-yubi.com", "https://go-yubi.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "FinTech" },
+                "Guindy (SIDCO / Olympia)", "Prestige Polygon, Anna Salai, Rathna Nagar, Chennai 600035",
+                13.0335, 80.2415, 2020, "1,000+", "Active",
+                new() { "Python", "Node.js", "React", "Kafka", "AWS", "FastAPI" },
+                new() { "Debt Market", "FinTech", "Credit Infrastructure", "Unicorn" });
+
+            AddCompany("comp-76", "Northern Arc Capital", "northern-arc", "Financial Inclusivity & Digital Lending Platform",
+                "Northern Arc leverages credit modeling, securitization algorithms, and capital marketplace platforms to enable funding for underbanked enterprises.",
+                "https://www.northernarc.com", "https://www.northernarc.com/careers",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "FinTech" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Kanagam Road, Taramani, Chennai 600113",
+                12.9915, 80.2422, 2008, "500+", "Active",
+                new() { "Python", "Java", "PostgreSQL", "React", "AWS", "Financial Modeling" },
+                new() { "Financial Inclusion", "Credit Modeling", "Lending" });
+
+            AddCompany("comp-77", "Kaleidofin", "kaleidofin", "Inclusive WealthTech Platform for Informal Sector Customers",
+                "Kaleidofin is a fintech company tailoring financial solutions combining savings, credit scoring, and insurance for low-income households.",
+                "https://kaleidofin.com", "https://kaleidofin.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "FinTech" },
+                "Central Chennai / Anna Salai", "Alwarpet, Chennai 600018",
+                13.0338, 80.2525, 2017, "200+", "Active",
+                new() { "Python", "React Native", "PostgreSQL", "AWS", "Data Science" },
+                new() { "Inclusion", "Neo-Banking", "WealthTech" });
+
+            AddCompany("comp-78", "Financial Software and Systems (FSS)", "fssnet", "Global Payment Processing & Core ATM Switch Engine",
+                "FSS powers retail payments, secure payment gateways, ATM switching, and merchant digital onboarding across 50+ global tier-1 banks.",
+                "https://www.fsstech.com", "https://www.fsstech.com/careers",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "FinTech", "Cybersecurity" },
+                "OMR (IT Corridor)", "G4, Mount Ponamallee Road & Rajiv Gandhi Salai, Navalur, Chennai 603103",
+                12.8472, 80.2268, 1991, "3,000+", "Active",
+                new() { "C", "C++", "Java", "Oracle", "Switch Architecture", "PCI-DSS" },
+                new() { "Payment Switch", "Card Processing", "FinTech" });
+
+            AddCompany("comp-79", "Computer Age Management Services (CAMS)", "cams-india", "Technology Driver of India's Mutual Fund Industry",
+                "CAMS processes over 69% of India's mutual fund industry transactions, operating deep investor recordkeeping and real-time electronic KYC engines.",
+                "https://www.camsonline.com", "https://www.camsonline.com/careers",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "FinTech" },
+                "Central Chennai / Anna Salai", "Rayala Towers, 158 Anna Salai, Chennai 600002",
+                13.0612, 80.2615, 1988, "4,000+", "Active",
+                new() { "Java", ".NET", "Oracle", "Angular", "Spring Boot", "Microservices" },
+                new() { "Mutual Funds", "Capital Markets", "Financial Tech" });
+
+            // ==========================================
+            // 11. DEEPTECH, SEMICONDUCTOR & ROBOTICS
+            // ==========================================
+            AddCompany("comp-80", "Mindgrove Technologies", "mindgrove-tech", "Indigenous RISC-V Fabless Semiconductor Silicon Startup",
+                "Mindgrove designs cost-effective, high-performance edge compute RISC-V microcontrollers and System-on-Chips for IoT and automotive sensors.",
+                "https://mindgrovetech.in", "https://mindgrovetech.in/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "Semiconductor & Hardware", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Kanagam Road, Taramani, Chennai 600113",
+                12.9912, 80.2435, 2021, "50-100", "Active",
+                new() { "RISC-V", "Verilog", "C++", "VHDL", "Linux Kernel", "Embedded Systems" },
+                new() { "Semiconductors", "SoC", "RISC-V", "IIT Madras" });
+
+            AddCompany("comp-81", "InCore Semiconductors", "incore-semiconductors", "RISC-V Processor Core IP & Configurable SoC Generators",
+                "InCore designs customizable RISC-V processor cores, fault-tolerant IP blocks, and automated SoC composition platforms originated at IITM.",
+                "https://incoresemi.com", "https://incoresemi.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "Semiconductor & Hardware", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9918, 80.2438, 2018, "50-100", "Active",
+                new() { "Bluespec", "Verilog", "Python", "RISC-V", "Compilers", "Silicon Architecture" },
+                new() { "Semiconductor IP", "RISC-V", "Processor Architecture" });
+
+            AddCompany("comp-82", "Detect Technologies", "detect-technologies", "AI Computer Vision for Industrial Safety & Autonomous Drones",
+                "Detect Technologies deploys real-time video analytics and automated inspection drones for petrochemical plants and heavy industrial facilities.",
+                "https://detecttechnologies.com", "https://detecttechnologies.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "Module 2A, 3rd Floor, D Block, IITM Research Park, Taramani, Chennai 600113",
+                12.9915, 80.2428, 2016, "200-500", "Active",
+                new() { "Python", "PyTorch", "OpenCV", "TensorRT", "React", "ROS", "Drone AI" },
+                new() { "Computer Vision", "Industrial AI", "Drones", "IIT Madras" });
+
+            AddCompany("comp-83", "Planys Technologies", "planys-tech", "Underwater Inspection Robotics & Acoustic NDT Marine Systems",
+                "Planys manufactures submerged Remotely Operated Vehicles (ROVs) equipped with AI ultrasonic sensors to inspect bridges, dams, and offshore ports.",
+                "https://planystech.com", "https://planystech.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "DeepTech & AI", "Manufacturing & Industrial Tech" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9922, 80.2441, 2015, "100-250", "Active",
+                new() { "Embedded C", "Python", "Robotics", "ROS", "Acoustics", "Hydrodynamics" },
+                new() { "Marine Robotics", "Underwater ROV", "DeepTech" });
+
+            AddCompany("comp-84", "Solinas Integrity", "solinas-integrity", "Pipeline Robotics & Sanitation Automation DeepTech",
+                "Solinas develops miniature crawlers and autonomous robots for pipeline health monitoring, water loss mitigation, and hazardous cleaning.",
+                "https://solinas.in", "https://solinas.in/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "DeepTech & AI", "CleanTech & Renewable Energy" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9914, 80.2432, 2018, "50-100", "Active",
+                new() { "Python", "C++", "Robotics", "Embedded Linux", "IoT Sensors" },
+                new() { "Robotics", "CleanTech", "Pipeline AI", "Sanitation" });
+
+            AddCompany("comp-85", "Aerostrovilos Energy", "aerostrovilos", "Decentralized Micro Gas Turbines for Clean Energy Generation",
+                "Aerostrovilos builds multi-fuel micro gas turbines engineered with IIT Madras combustion research for zero-emission microgrids and heavy EV chargers.",
+                "https://aerostrovilos.com", "https://aerostrovilos.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "CleanTech & Renewable Energy", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9917, 80.2435, 2017, "50-100", "Active",
+                new() { "Thermodynamics", "Simulink", "CFD", "Embedded Control", "IoT" },
+                new() { "CleanTech", "Gas Turbines", "EV Charging", "Clean Power" });
+
+            AddCompany("comp-86", "Tan90 Thermal Solutions", "tan90-thermal", "Thermal Energy Storage & Passive Cold-Chain Logistics Tech",
+                "Tan90 develops proprietary Phase Change Material (PCM) portable cold storage units reducing diesel reefer reliance for food and vaccine transport.",
+                "https://tan90.in", "https://tan90.in/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "CleanTech & Renewable Energy", "Supply Chain & Logistics Tech" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9916, 80.2433, 2019, "50-100", "Active",
+                new() { "Thermal Dynamics", "IoT Telematics", "Python", "Cold Chain Tech" },
+                new() { "CleanTech", "Thermal Battery", "Cold Chain" });
+
+            AddCompany("comp-87", "XYMA Analytics", "xyma-analytics", "High-Temperature Ultrasonic Waveguide Sensors for Heavy Industry",
+                "XYMA produces continuous ultrasonic multipoint waveguide sensors for real-time temperature and viscosity telemetry in steel and refinery furnaces.",
+                "https://xyma.in", "https://xyma.in/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "DeepTech & AI", "Manufacturing & Industrial Tech" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9913, 80.2429, 2019, "50-100", "Active",
+                new() { "Ultrasonic Signal Processing", "Python", "Edge AI", "Embedded C" },
+                new() { "Industrial IoT", "Ultrasonic Sensors", "DeepTech" });
+
+            // ==========================================
+            // 12. EDTECH, LEARNING & TALENT PLATFORMS
+            // ==========================================
+            AddCompany("comp-88", "GUVI Geek Networks", "guvi", "Vernacular Tech Learning & Upskilling Platform (An HCL Group Company)",
+                "GUVI provides high-quality programming and software engineering curriculum in vernacular Indian languages, backed by interactive coding sandbox engines.",
+                "https://www.guvi.in", "https://www.guvi.in/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "EdTech" },
+                "Taramani (Tidel Park & Ascendas)", "IITM Research Park, Kanagam Road, Taramani, Chennai 600113",
+                12.9911, 80.2426, 2014, "250-500", "Active",
+                new() { "Python", "React", "Node.js", "Docker", "AWS", "Compiler Sandboxes" },
+                new() { "EdTech", "Vernacular", "HCL Group", "Coding Sandbox" });
+
+            AddCompany("comp-89", "Skill-Lync", "skill-lync", "Engineering Simulation, EV & Mechanical Upskilling Platform",
+                "Skill-Lync trains mechanical, electrical, and computer engineers with industry-grade software tools like ANSYS, MATLAB, and Autonomous Driving stacks.",
+                "https://skill-lync.com", "https://skill-lync.com/careers",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "EdTech" },
+                "Taramani (Tidel Park & Ascendas)", "BA Continuum / Tidel Park Road, Taramani, Chennai 600113",
+                12.9875, 80.2455, 2015, "500-1,000", "Active",
+                new() { "Python", "React", "Node.js", "CAD/CAE", "AWS", "PostgreSQL" },
+                new() { "EdTech", "Engineering", "Simulation", "Upskilling" });
+
+            AddCompany("comp-90", "Veranda Learning Solutions", "veranda-learning", "Comprehensive Tech-Enabled Exam Prep & Career Training",
+                "Veranda Learning operates end-to-end digital test prep platforms across banking, civil services, software coding, and commerce qualifications.",
+                "https://www.verandalearning.com", "https://www.verandalearning.com/careers",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "EdTech" },
+                "Central Chennai / Anna Salai", "Old No. 54, New No. 34, Nungambakkam High Road, Chennai 600034",
+                13.0602, 80.2415, 2018, "1,000+", "Active",
+                new() { "React", "Node.js", "AWS", "Python", "Video Streaming Architecture" },
+                new() { "EdTech", "Public Listed", "Career Training" });
+
+            // ==========================================
+            // 13. HEALTHTECH & BIOTECH
+            // ==========================================
+            AddCompany("comp-91", "Karkinos Healthcare", "karkinos-healthcare", "Decentralized Oncology Network & Cancer Care Platform",
+                "Karkinos Healthcare builds digital health platforms for early oncology detection, genomic profiling, and remote patient navigation.",
+                "https://karkinos.in", "https://karkinos.in/careers/",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "HealthTech & BioTech", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9918, 80.2432, 2020, "250-500", "Active",
+                new() { "Python", "React", "PostgreSQL", "FHIR / HL7", "Genomics", "AWS" },
+                new() { "Oncology", "Digital Health", "HealthTech", "Genomics" });
+
+            AddCompany("comp-92", "Apollo TeleHealth & Digital Health", "apollo-telehealth", "Pioneer Telemedicine, Virtual Clinics & Hospital AI",
+                "Apollo TeleHealth connects rural and urban patients to doctors via clinical telemedicine, AI symptom triage, and health kiosks.",
+                "https://www.apollotelehealth.com", "https://www.apollotelehealth.com/careers",
+                new() { "ENTERPRISE", "PRODUCT COMPANY" }, new() { "HealthTech & BioTech" },
+                "Central Chennai / Anna Salai", "19 Bishop Gardens, Raja Annamalaipuram & Greams Road, Chennai 600028",
+                13.0185, 80.2575, 1999, "2,000+", "Active",
+                new() { "WebRTC", "Python", "Java", "React Native", "PostgreSQL", "Medical AI" },
+                new() { "Telemedicine", "Digital Health", "Apollo Hospitals" });
+
+            AddCompany("comp-93", "Kauvery Hospitals Digital", "kauvery-digital", "Hospital Information Systems & Smart Clinical Monitoring",
+                "Kauvery Hospitals' software engineering wing builds next-gen Electronic Medical Record (EMR) systems, remote ICU monitors, and patient apps.",
+                "https://www.kauveryhospital.com", "https://www.kauveryhospital.com/careers/",
+                new() { "ENTERPRISE" }, new() { "HealthTech & BioTech" },
+                "Central Chennai / Anna Salai", "No. 81, TTK Road, Alwarpet, Chennai 600018",
+                13.0365, 80.2512, 1999, "1,000+", "Active",
+                new() { "Node.js", "React", "Flutter", "PostgreSQL", "HL7", "AWS" },
+                new() { "Hospital Digital", "EMR", "HealthTech" });
+
+            AddCompany("comp-94", "CareStack (GoodX Software)", "carestack", "Cloud Dental Practice Management & Patient Experience Platform",
+                "CareStack develops comprehensive cloud software for multi-location dental practices, automating scheduling, billing, and clinical charting.",
+                "https://carestack.com", "https://carestack.com/careers",
+                new() { "PRODUCT COMPANY", "SAAS" }, new() { "HealthTech & BioTech", "SaaS / Enterprise Software" },
+                "Taramani (Tidel Park & Ascendas)", "Ascendas Tech Park, CSIR Road, Taramani, Chennai 600113",
+                12.9872, 80.2458, 2015, "500+", "Active",
+                new() { "C#", ".NET", "React", "Azure", "Microservices", "SQL Server" },
+                new() { "Dental SaaS", "HealthTech", "Cloud Practice" });
+
+            // ==========================================
+            // 14. AUTOMOTIVE TECH, EV & CONNECTED MOBILITY
+            // ==========================================
+            AddCompany("comp-95", "Valeo India Tech Centre", "valeo-chennai", "Autonomous Driving Systems & Thermal EV Management R&D",
+                "Valeo's Global Tech Center in Navalur designs smart sensor fusion algorithms, ultrasonic ADAS, and high-efficiency EV inverters.",
+                "https://www.valeo.com", "https://www.valeo.com/en/careers/",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Automotive Tech & EV", "DeepTech & AI" },
+                "OMR (IT Corridor)", "Pacifica Tech Park, Rajiv Gandhi Salai, Navalur, Chennai 603103",
+                12.8468, 80.2258, 1997, "3,000+", "Active",
+                new() { "C++", "Python", "Embedded Linux", "AUTOSAR", "Computer Vision", "CANoe" },
+                new() { "Automotive", "ADAS", "Autonomous Driving", "EV" });
+
+            AddCompany("comp-96", "Visteon Corporation Chennai", "visteon-chennai", "Digital Cockpit Electronics & Curved Smart Displays",
+                "Visteon's Chennai technical center engineers integrated digital cockpit software, instrument clusters, and cybersecurity gateways for smart cars.",
+                "https://www.visteon.com", "https://visteon.com/careers/",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Automotive Tech & EV" },
+                "Guindy (SIDCO / Olympia)", "Olympia Technology Park, Guindy Industrial Estate, Chennai 600032",
+                13.0122, 80.2085, 2000, "2,000+", "Active",
+                new() { "C++", "Android Automotive", "Qt/QML", "RTOS", "Embedded C", "AUTOSAR" },
+                new() { "Connected Cars", "Digital Cockpit", "Automotive" });
+
+            AddCompany("comp-97", "Bosch Global Software Technologies (BGSW)", "bosch-bgsw-chennai", "Connected Vehicles, Cloud Telematics & Smart Factory AI",
+                "BGSW Chennai engineering centers lead software development for electronic stability control, connected powertrain telemetry, and IoT.",
+                "https://www.bosch-softwaretechnologies.com", "https://www.bosch-softwaretechnologies.com/en/careers/",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Automotive Tech & EV", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "Ramanujan IT City, Rajiv Gandhi Salai, Taramani, Chennai 600113",
+                12.9875, 80.2468, 1997, "4,000+", "Active",
+                new() { "Embedded C", "Python", "Java", "Azure IoT", "AUTOSAR", "C++" },
+                new() { "Automotive", "Connected Mobility", "Bosch", "Smart Factory" });
+
+            AddCompany("comp-98", "Daimler India Commercial Vehicles (DICV Tech)", "daimler-dicv-chennai", "Connected Truck Telematics & Autonomous Commercial Freight",
+                "DICV develops the Truckonnect intelligent fleet telematics system, predictive maintenance AI, and electric commercial vehicles.",
+                "https://www.daimler-truck.com", "https://www.bharatbenz.com/careers",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Automotive Tech & EV" },
+                "Porur & DLF Cybercity", "SIPCOT Industrial Growth Centre, Oragadam & Porur Corridor, Chennai 602105",
+                12.8425, 79.9515, 2009, "4,000+", "Active",
+                new() { "Java", "Python", "Embedded C", "IoT Telematics", "AWS", "Big Data" },
+                new() { "BharatBenz", "Fleet Telematics", "Connected Trucks" });
+
+            // ==========================================
+            // 15. SUPPLY CHAIN, SEMICONDUCTOR & HARDWARE
+            // ==========================================
+            AddCompany("comp-99", "Freightify", "freightify", "Rate Management & Digital Ocean Freight Forwarding SaaS",
+                "Freightify automates freight quotation, shipping schedule lookups, and container tracking for 300+ international ocean freight forwarders.",
+                "https://www.freightify.com", "https://www.freightify.com/careers",
+                new() { "PRODUCT COMPANY", "SAAS", "STARTUP" }, new() { "Supply Chain & Logistics Tech", "SaaS / Enterprise Software" },
+                "Perungudi & Kandanchavadi", "OMR, Perungudi, Chennai 600096",
+                12.9642, 80.2458, 2016, "100-250", "Active",
+                new() { "Node.js", "React", "Python", "MongoDB", "AWS", "Microservices" },
+                new() { "Freight Forwarding", "Logistics SaaS", "Maritime Tech" });
+
+            AddCompany("comp-100", "Pando Enterprise Technologies", "pando-ai", "AI-Powered Supply Chain Visibility & Logistics Network Platform",
+                "Pando is a global leader in networked logistics software, optimizing freight dispatch, fulfillment tracking, and freight audit for Fortune 500s.",
+                "https://pando.ai", "https://pando.ai/careers",
+                new() { "PRODUCT COMPANY", "SAAS", "STARTUP" }, new() { "Supply Chain & Logistics Tech", "SaaS / Enterprise Software" },
+                "OMR (IT Corridor)", "Prince Infocity, Rajiv Gandhi Salai, Kandanchavadi, Chennai 600096",
+                12.9652, 80.2468, 2017, "150-300", "Active",
+                new() { "Python", "Go", "React", "PostgreSQL", "AWS", "Machine Learning" },
+                new() { "Supply Chain", "Logistics Visibility", "Enterprise SaaS" });
+
+            AddCompany("comp-101", "Flex (Flextronics) Global Business Services", "flex-chennai", "Advanced Electronics Manufacturing & Embedded Hardware Design",
+                "Flex operates massive engineering and supply chain centers in DLF Cybercity and Sriperumbudur, manufacturing electronics for Apple, HP, and Cisco.",
+                "https://flex.com", "https://flex.com/careers",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Semiconductor & Hardware", "Manufacturing & Industrial Tech" },
+                "Porur & DLF Cybercity", "DLF Cybercity, 1/124 Shivaji Gardens, Mount Poonamallee Road, Porur, Chennai 600089",
+                13.0315, 80.1652, 1969, "10,000+", "Active",
+                new() { "Embedded C", "C++", "PCB Design", "FPGA", "Python", "Supply Chain Analytics" },
+                new() { "Electronics Manufacturing", "Hardware Engineering", "MNC" });
+
+            AddCompany("comp-102", "Qualcomm India Chennai R&D", "qualcomm-chennai", "5G Modem Firmware, RF Silicon & Automotive Telematics SoC",
+                "Qualcomm's Chennai R&D facility designs wireless connectivity microcode, Wi-Fi 7 silicon, and Snapdragon automotive communication processors.",
+                "https://www.qualcomm.com", "https://www.qualcomm.com/company/careers",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Semiconductor & Hardware", "DeepTech & AI" },
+                "Taramani (Tidel Park & Ascendas)", "Ramanujan IT City, Rajiv Gandhi Salai, Taramani, Chennai 600113",
+                12.9885, 80.2475, 1985, "1,500+", "Active",
+                new() { "C", "C++", "Python", "RTOS", "5G NR", "ASIC Design", "Verilog" },
+                new() { "Semiconductor", "5G", "Snapdragon", "SoC" });
+
+            AddCompany("comp-103", "Applied Materials India", "applied-materials-chennai", "Nanomanufacturing Tech & Semiconductor Fab Equipment Center",
+                "Applied Materials' Center of Excellence at IIT Madras collaborates on advanced materials science, atomic layer deposition, and semiconductor inspection.",
+                "https://www.appliedmaterials.com", "https://www.appliedmaterials.com/en-in/careers",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Semiconductor & Hardware" },
+                "Taramani (Tidel Park & Ascendas)", "IIT Madras Research Park, Taramani, Chennai 600113",
+                12.9912, 80.2425, 1967, "500+", "Active",
+                new() { "C++", "Python", "Control Systems", "Physics Simulation", "MATLAB" },
+                new() { "Semiconductor Equipment", "Materials Science", "Nanotechnology" });
+
+            AddCompany("comp-104", "Western Digital Chennai", "western-digital-chennai", "Enterprise Flash Storage Controller & NVMe Firmware R&D",
+                "Western Digital's Chennai engineering site leads firmware development for enterprise solid-state drives (SSDs), NAND flash, and cloud storage.",
+                "https://www.westerndigital.com", "https://careers.westerndigital.com/",
+                new() { "MNC", "GCC", "ENTERPRISE" }, new() { "Semiconductor & Hardware" },
+                "Taramani (Tidel Park & Ascendas)", "Ramanujan IT City, Cambridge Building, Taramani, Chennai 600113",
+                12.9878, 80.2468, 1970, "1,000+", "Active",
+                new() { "C", "C++", "NVMe", "PCIe", "Python", "Flash Memory", "RTOS" },
+                new() { "Storage Tech", "SSD Firmware", "Semiconductor" });
+
+            AddCompany("comp-105", "Mad Street Den (Vue.ai)", "vue-ai", "Enterprise Computer Vision & Omnichannel Generative AI",
+                "Mad Street Den's Vue.ai platform uses computer vision and neural networks to power catalog management, 3D on-model imagery, and retail AI.",
+                "https://vue.ai", "https://vue.ai/careers/",
+                new() { "PRODUCT COMPANY", "STARTUP" }, new() { "DeepTech & AI", "E-Commerce & Retail Tech" },
+                "Central Chennai / Anna Salai", "Prestige Polygon, 471 Anna Salai, Teynampet, Chennai 600018",
+                13.0335, 80.2425, 2013, "250-500", "Active",
+                new() { "Python", "PyTorch", "OpenCV", "TensorFlow", "React", "AWS", "Generative AI" },
+                new() { "Computer Vision", "Generative AI", "Retail AI", "Startup" });
+
             return list;
         }
     }

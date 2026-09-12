@@ -26,9 +26,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 2. EF Core In-Memory Database (PostgreSQL-ready abstraction)
+// 2. EF Core Database: PostgreSQL for production/containers, In-Memory for testing
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryDatabase") || 
+                  builder.Environment.IsEnvironment("Testing") ||
+                  string.IsNullOrWhiteSpace(connectionString) ||
+                  connectionString.Contains("InMemory", StringComparison.OrdinalIgnoreCase);
+
 builder.Services.AddDbContext<ChennaiDbContext>(options =>
-    options.UseInMemoryDatabase("ChennaiStartupJobsMapDb"));
+{
+    if (useInMemory)
+    {
+        options.UseInMemoryDatabase("ChennaiStartupJobsMapDb");
+    }
+    else
+    {
+        options.UseNpgsql(connectionString, npgsqlOptions =>
+        {
+            npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorCodesToAdd: null);
+        });
+    }
+});
 
 // 3. JWT Authentication & Token Validation
 var jwtSecret = builder.Configuration["Jwt:SecretKey"] ?? "ChennaiStartupJobsMapSuperSecretEnterpriseSigningKey2026";
@@ -164,11 +182,27 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Ensure Database Seeded
+// Ensure Database Schema Migrated or Seeded
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ChennaiDbContext>();
-    db.Database.EnsureCreated();
+    if (db.Database.IsRelational())
+    {
+        try
+        {
+            db.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning(ex, "Relational migration could not connect to PostgreSQL. Falling back to EnsureCreated.");
+            db.Database.EnsureCreated();
+        }
+    }
+    else
+    {
+        db.Database.EnsureCreated();
+    }
 }
 
 // Global Exception Handling Middleware

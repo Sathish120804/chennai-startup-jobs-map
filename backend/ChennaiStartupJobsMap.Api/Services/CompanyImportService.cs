@@ -241,6 +241,13 @@ namespace ChennaiStartupJobsMap.Api.Services
             _deduplicationService = deduplicationService;
         }
 
+        public CompanyImportService(
+            ChennaiDbContext db, 
+            INormalizationService norm)
+            : this(db, norm, new ChennaiRelevanceEvaluator(), new CompanyDeduplicationService(db))
+        {
+        }
+
         public async Task<CompanyImportResult> SeedVerifiedDirectoryAsync()
         {
             var directory = CompanyDirectoryData.GetVerifiedChennaiCompanies();

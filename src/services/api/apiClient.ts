@@ -5,10 +5,15 @@ const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://loca
 export async function fetchJson<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
   try {
+    const headers: Record<string, string> = {};
+    if (!(options?.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
+
     const res = await fetch(url, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        ...headers,
         ...(options?.headers || {}),
       },
     });
@@ -18,7 +23,10 @@ export async function fetchJson<T>(endpoint: string, options?: RequestInit): Pro
       throw new Error(errorPayload.message || `API Error ${res.status}`);
     }
 
-    return await res.json();
+    const json = await res.json();
+    return (json && typeof json === 'object' && 'data' in json && (json as any).data !== undefined) 
+      ? (json as any).data 
+      : json;
   } catch (err: any) {
     console.warn(`[API Client Fallback] Failed to connect to backend at ${url}. Falling back to client-side data engine.`, err);
     throw err;

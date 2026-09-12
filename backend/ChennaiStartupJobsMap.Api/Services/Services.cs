@@ -80,15 +80,45 @@ namespace ChennaiStartupJobsMap.Api.Services
 
             var companies = await query.ToListAsync();
 
+            // Eliminate N+1 query: Pre-aggregate active jobs statistics in a single GroupBy query
+            var jobStatsLookup = await _db.Jobs.AsNoTracking()
+                .Where(j => j.IsActive)
+                .GroupBy(j => j.CompanyId)
+                .Select(g => new
+                {
+                    CompanyId = g.Key,
+                    ActiveJobsCount = g.Count(),
+                    FresherJobsCount = g.Count(j => j.IsFresher),
+                    EngJobsCount = g.Count(j => j.IsEngineering),
+                    InternCount = g.Count(j => j.IsInternship)
+                })
+                .ToDictionaryAsync(s => s.CompanyId, s => s);
+
+            Dictionary<string, List<string>>? jobTechsByCompany = null;
+            if (technologies != null && technologies.Count > 0)
+            {
+                var activeJobs = await _db.Jobs.AsNoTracking()
+                    .Where(j => j.IsActive)
+                    .Select(j => new { j.CompanyId, j.Technologies })
+                    .ToListAsync();
+
+                jobTechsByCompany = activeJobs
+                    .GroupBy(j => j.CompanyId)
+                    .ToDictionary(g => g.Key, g => g.SelectMany(x => x.Technologies).Distinct().ToList());
+            }
+
             // Calculate Company DTOs with Stats
             var companyDtos = new List<CompanyDto>();
             foreach (var c in companies)
             {
-                var companyJobs = await _db.Jobs.AsNoTracking().Where(j => j.CompanyId == c.Id && j.IsActive).ToListAsync();
-                var activeJobsCount = companyJobs.Count;
-                var fresherJobsCount = companyJobs.Count(j => j.IsFresher);
-                var engJobsCount = companyJobs.Count(j => j.IsEngineering);
-                var internCount = companyJobs.Count(j => j.IsInternship);
+                jobStatsLookup.TryGetValue(c.Id, out var stats);
+                var activeJobsCount = stats?.ActiveJobsCount ?? 0;
+                var fresherJobsCount = stats?.FresherJobsCount ?? 0;
+                var engJobsCount = stats?.EngJobsCount ?? 0;
+                var internCount = stats?.InternCount ?? 0;
+                var jobTechs = (jobTechsByCompany != null && jobTechsByCompany.TryGetValue(c.Id, out var tList)) 
+                    ? tList 
+                    : new List<string>();
 
                 // Category filter
                 if (categories != null && categories.Count > 0 && !c.Categories.Any(cat => categories.Contains(cat)))
@@ -122,7 +152,7 @@ namespace ChennaiStartupJobsMap.Api.Services
                 }
 
                 // Technology filter
-                if (technologies != null && technologies.Count > 0 && !technologies.Any(t => c.TechStack.Contains(t) || companyJobs.Any(j => j.Technologies.Contains(t))))
+                if (technologies != null && technologies.Count > 0 && !technologies.Any(t => c.TechStack.Contains(t) || jobTechs.Contains(t)))
                 {
                     continue;
                 }

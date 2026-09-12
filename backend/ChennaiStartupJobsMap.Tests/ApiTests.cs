@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using ChennaiStartupJobsMap.Api.Authentication;
 using ChennaiStartupJobsMap.Api.Data;
 using ChennaiStartupJobsMap.Api.DTOs;
 using ChennaiStartupJobsMap.Api.Entities;
+using ChennaiStartupJobsMap.Api.Models;
 using ChennaiStartupJobsMap.Api.Services;
 
 namespace ChennaiStartupJobsMap.Tests
@@ -352,6 +354,107 @@ namespace ChennaiStartupJobsMap.Tests
             Assert.Equal(1, overview.TotalApplyClicks);
             Assert.NotEmpty(overview.TopViewedJobs);
             Assert.Equal("job-1", overview.TopViewedJobs.First().Key);
+        }
+
+        [Fact]
+        public async Task CompanyImportService_ParsesAndValidatesCsvImport()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var relevance = new ChennaiRelevanceEvaluator();
+            var dedupe = new CompanyDeduplicationService(db);
+            var importService = new CompanyImportService(db, norm, relevance, dedupe);
+
+            var csvContent = @"name,website,careers_url,hub,category,company_type,city
+Karkinos Healthcare,https://karkinos.in,https://karkinos.in/careers,Taramani (Tidel Park & Ascendas),HealthTech & BioTech,STARTUP,Chennai
+Silicon Valley Fake,https://fake-sv.com,https://fake-sv.com/careers,Other,SaaS,STARTUP,San Francisco";
+
+            var report = await importService.ImportCsvAsync(csvContent, "Test CSV", dryRun: true);
+
+            Assert.Equal(2, report.TotalRows);
+            Assert.Equal(1, report.NewCompanies);
+            Assert.Equal(1, report.RejectedCompanies); // Off-Chennai company rejected
+            Assert.NotEmpty(report.SamplePreview);
+            Assert.Equal("Karkinos Healthcare", report.SamplePreview[0].Name);
+        }
+
+        [Fact]
+        public async Task CompanyImportService_DryRunDoesNotPersistToDatabase()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var importService = new CompanyImportService(db, norm);
+
+            var initialCount = await db.Companies.CountAsync();
+
+            var csvContent = @"name,website,careers_url,hub,category,company_type,city
+Detect Technologies,https://detecttechnologies.com,https://detecttechnologies.com/careers,Taramani (Tidel Park & Ascendas),DeepTech & AI,STARTUP,Chennai";
+
+            var report = await importService.ImportCsvAsync(csvContent, "Test CSV", dryRun: true);
+
+            Assert.Equal(1, report.TotalRows);
+            Assert.Equal(1, report.NewCompanies);
+
+            var countAfterDryRun = await db.Companies.CountAsync();
+            Assert.Equal(initialCount, countAfterDryRun); // Database must remain unchanged on dry run
+        }
+
+        [Fact]
+        public async Task CompanyImportService_ParsesAndValidatesJsonImport()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var importService = new CompanyImportService(db, norm);
+
+            var jsonContent = @"[
+                {
+                    ""Name"": ""Mindgrove Technologies"",
+                    ""Website"": ""https://mindgrovetech.in"",
+                    ""CareersUrl"": ""https://mindgrovetech.in/careers"",
+                    ""Hub"": ""Taramani (Tidel Park & Ascendas)"",
+                    ""Category"": ""Semiconductor & Hardware"",
+                    ""City"": ""Chennai"",
+                    ""Address"": ""IIT Madras Research Park, Taramani, Chennai""
+                },
+                {
+                    ""Name"": ""Offshore Non-Chennai"",
+                    ""Website"": ""https://offshore.example.com"",
+                    ""City"": ""Berlin"",
+                    ""Hub"": ""Other"",
+                    ""Address"": ""Berlin, Germany""
+                }
+            ]";
+
+            var report = await importService.ImportJsonAsync(jsonContent, "Test JSON", dryRun: true);
+
+            Assert.Equal(2, report.TotalRows);
+            Assert.Equal(2, report.ValidRows);
+            Assert.Equal(1, report.NewCompanies);
+            Assert.Equal(1, report.RejectedCompanies);
+            Assert.Single(report.SamplePreview);
+            Assert.Equal("Mindgrove Technologies", report.SamplePreview[0].Name);
+        }
+
+        [Fact]
+        public async Task CompanyImportService_CalculatesDataQualityMetricsCorrectly()
+        {
+            using var db = GetInMemoryDbContext();
+            var norm = new NormalizationService();
+            var importService = new CompanyImportService(db, norm);
+
+            // Seed directory
+            await importService.SeedVerifiedDirectoryAsync();
+
+            var metrics = await importService.GetDataQualityMetricsAsync();
+
+            Assert.NotNull(metrics);
+            Assert.Equal(700, metrics.TargetCompanyGoal);
+            Assert.True(metrics.TotalCompanies >= 100);
+            Assert.True(metrics.VerifiedCompanies >= 100);
+            Assert.True(metrics.CurrentVerifiedCount >= 100);
+            Assert.True(metrics.TargetProgressPercentage > 10.0);
+            Assert.NotEmpty(metrics.CompaniesByCategory);
+            Assert.NotEmpty(metrics.CompaniesByCompanyType);
         }
     }
 }

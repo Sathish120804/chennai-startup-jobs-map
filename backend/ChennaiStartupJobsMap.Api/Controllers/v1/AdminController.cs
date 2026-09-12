@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ChennaiStartupJobsMap.Api.Common;
 using ChennaiStartupJobsMap.Api.Data;
+using ChennaiStartupJobsMap.Api.DTOs;
 using ChennaiStartupJobsMap.Api.Entities;
 using ChennaiStartupJobsMap.Api.Models;
 using ChennaiStartupJobsMap.Api.Services;
@@ -282,6 +285,96 @@ namespace ChennaiStartupJobsMap.Api.Controllers.v1
         {
             var res = await importer.SeedVerifiedDirectoryAsync();
             return Ok(ApiResponse<CompanyImportResult>.Ok(res, "Verified Chennai companies seeded successfully."));
+        }
+
+        /// <summary>
+        /// Import companies from CSV format with optional dry-run preview.
+        /// Accepts uploaded file or raw body text.
+        /// </summary>
+        [HttpPost("import/companies/csv")]
+        [Authorize(Roles = UserRoles.Admin)]
+        [ProducesResponseType(typeof(ApiResponse<CompanyImportReportDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<CompanyImportReportDto>>> ImportCompaniesCsv(
+            [FromQuery] bool dryRun = false,
+            [FromQuery] string sourceName = "Admin CSV Import",
+            [FromServices] ICompanyImportService importer = null!)
+        {
+            string csvContent = string.Empty;
+            if (Request.HasFormContentType && Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length > 10 * 1024 * 1024)
+                    return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("File exceeds maximum allowed size of 10MB."));
+                
+                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (ext != ".csv" && ext != ".txt")
+                    return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("Invalid file extension. Only .csv or .txt allowed."));
+
+                using var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
+                csvContent = await reader.ReadToEndAsync();
+            }
+            else
+            {
+                using var reader = new StreamReader(Request.Body, Encoding.UTF8);
+                csvContent = await reader.ReadToEndAsync();
+            }
+
+            if (string.IsNullOrWhiteSpace(csvContent))
+                return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("No CSV content provided."));
+
+            var report = await importer.ImportCsvAsync(csvContent, sourceName, dryRun);
+            return Ok(ApiResponse<CompanyImportReportDto>.Ok(report, dryRun ? "Dry run completed." : "Import completed."));
+        }
+
+        /// <summary>
+        /// Import companies from JSON format with optional dry-run preview.
+        /// </summary>
+        [HttpPost("import/companies/json")]
+        [Authorize(Roles = UserRoles.Admin)]
+        [ProducesResponseType(typeof(ApiResponse<CompanyImportReportDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<CompanyImportReportDto>>> ImportCompaniesJson(
+            [FromQuery] bool dryRun = false,
+            [FromQuery] string sourceName = "Admin JSON Import",
+            [FromServices] ICompanyImportService importer = null!)
+        {
+            string jsonContent = string.Empty;
+            if (Request.HasFormContentType && Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length > 10 * 1024 * 1024)
+                    return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("File exceeds maximum allowed size of 10MB."));
+                
+                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (ext != ".json" && ext != ".txt")
+                    return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("Invalid file extension. Only .json or .txt allowed."));
+
+                using var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
+                jsonContent = await reader.ReadToEndAsync();
+            }
+            else
+            {
+                using var reader = new StreamReader(Request.Body, Encoding.UTF8);
+                jsonContent = await reader.ReadToEndAsync();
+            }
+
+            if (string.IsNullOrWhiteSpace(jsonContent))
+                return BadRequest(ApiResponse<CompanyImportReportDto>.Fail("No JSON content provided."));
+
+            var report = await importer.ImportJsonAsync(jsonContent, sourceName, dryRun);
+            return Ok(ApiResponse<CompanyImportReportDto>.Ok(report, dryRun ? "Dry run completed." : "Import completed."));
+        }
+
+        /// <summary>
+        /// System-wide data quality and audit metrics dashboard.
+        /// </summary>
+        [HttpGet("quality/dashboard")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponse<DataQualityDashboardDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<DataQualityDashboardDto>>> GetDataQualityDashboard(
+            [FromServices] ICompanyImportService importer)
+        {
+            var metrics = await importer.GetDataQualityMetricsAsync();
+            return Ok(ApiResponse<DataQualityDashboardDto>.Ok(metrics));
         }
     }
 }
